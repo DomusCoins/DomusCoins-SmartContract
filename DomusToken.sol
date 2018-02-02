@@ -264,7 +264,7 @@ contract FinalizableToken is ERC20Token, OpsManaged {
 
    using Math for uint256;
    mapping(address=>uint) boardReservedAccount;
-
+   FlexibleTokenSale saleToken;
 
    // The constructor will assign the initial token supply to the owner (msg.sender).
    function FinalizableToken(string _name, string _symbol, uint8 _decimals, uint256 _totalSupply,address _publicReserved,uint256 _publicReservedPersentage,address[] _boardReserved,uint256[] _boardReservedPersentage) public
@@ -278,31 +278,41 @@ contract FinalizableToken is ERC20Token, OpsManaged {
 
    function transfer(address _to, uint256 _value) public returns (bool success) {
       validateTransfer(msg.sender, _to,_value);
-
+        if(address(saleToken) == _to) {
+                saleToken.setTotalToken(_value);
+        }
       return super.transfer(_to, _value);
    }
 
 
    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
       validateTransfer(msg.sender, _to, _value);
-
+        if(address(saleToken) == _to) {
+                saleToken.setTotalToken(_value);
+        }
       return super.transferFrom(_from, _to, _value);
    }
 
 
    function validateTransfer(address _sender, address _to, uint256 _value) private view {
     require(_to != address(0));
-    require(!isOwner(_to));
+    require(address(saleToken) == _sender || !isOwner(_to));
 
     
     uint256 allowed = boardReservedAccount[_sender];
+    
     
     if (allowed == 0) {
          return;
     }
     
+    
+    
     //calculation
     uint256 publicReservedRemaining = balances[owner];
+    uint256 icoToken = saleToken.getTotalTokenCount();
+    uint256 publicSoldToken = saleToken.getSoldTokenCount();
+    publicReservedRemaining = publicReservedRemaining.add(icoToken).sub(publicSoldToken);
     uint256 publicReservedSoldPersentage = publicReservedRemaining.mul(10000).div(publicReservedToken);
     uint256 remainToken = allowed.mul(publicReservedSoldPersentage).div(tokenConversionFactor);
     uint256 allowedToken = allowed.sub(remainToken);
@@ -310,26 +320,42 @@ contract FinalizableToken is ERC20Token, OpsManaged {
     //  
 
    }
+   
+   function currentTime() public constant returns (uint256) {
+      return now;
+   }
+   
+   function setICOAddress(FlexibleTokenSale _saleToken) public onlyOwner returns (bool) {
+      require(address(_saleToken) != address(0));
+      require(address(_saleToken) != address(this));
+      saleToken = _saleToken;
+      return true;
+   }
 }
 
 
 contract DOCTokenConfig {
 
-    string  public constant TOKEN_SYMBOL      = "ABC";
-    string  public constant TOKEN_NAME        = "ABC Token";
+    string  public constant TOKEN_SYMBOL      = "DOC";
+    string  public constant TOKEN_NAME        = "DOMUS COINS";
     uint8   public constant TOKEN_DECIMALS    = 18;
 
     uint256 public constant DECIMALSFACTOR    = 10**uint256(TOKEN_DECIMALS);
     uint256 public constant TOKEN_TOTALSUPPLY = 1000000000 * DECIMALSFACTOR;
     
-    address public constant PUBLIC_RESERVED = 0xca35b7d915458ef540ade6068dfe2f44e8fa733c;
+    address public constant PUBLIC_RESERVED = 0xbc2cd781169e83AB1Af1ab837f704d545194B52E;
     uint256 public constant PUBLIC_RESERVED_PERSENTAGE = 9000;
     
-    address[] public BOARD_RESERVED = [ 0x14723a09acff6d2a60dcdf7aa4aff308fddc160c,
-                                        0x4b0897b0513fdc7c541b6d9d7e929c4e5364d2db,
-                                        0x583031d1113ad414f02576bd6afabfb302140225,
-                                        0xdd870fa1b7c4700f2bd7f44238821c26f7392148,
-                                        0xEdEe789Eda59c4387055572a76A92FE4f67D0fa0 ];
+    address[] public BOARD_RESERVED = [ 0xc773ca08704EB9C03416c0514945DDeEB74F098A,
+                                        0x9bdB2652f7add45Fdb10D23DD68363DDF09F1550,
+                                        0x6BfefB1D11fFC09041CEE721bd1e3EA6Ac103011,
+                                        0xE2Fe7E2fc2122646a3F5a73a92f6D690B41173EE,
+                                        0xf19bdeAad7D3AEc3A986A97d81Aa66084D65E0f5,
+                                        0xA103c3e2483f63B66dec50239a418115884C9836,
+                                        0xF94Fac0D7062AFA3b7Ec9A3B354485ACE9a3A5CB,
+                                        0x191B2a493FaaC287bCC1D9a5c82D4C294809a91a,
+                                        0xf541869c9b5D2e70eC360bf7Cb6Db09aDa8aa2c3,
+                                        0x75Df6E47ED074314Ca57A4D665B48FD5dE0B41cb];
     
     uint256[] public BOARD_RESERVED_PERSENTAGE = [2000,2000,2000,1000,1000,500,500,400,300,300];
     
@@ -339,7 +365,7 @@ contract DOCToken is FinalizableToken, DOCTokenConfig {
 
    using Math for uint256;
    event TokensReclaimed(uint256 _amount);
-
+   
 
    function DOCToken() public
       FinalizableToken(TOKEN_NAME, TOKEN_SYMBOL, TOKEN_DECIMALS, TOKEN_TOTALSUPPLY, PUBLIC_RESERVED, PUBLIC_RESERVED_PERSENTAGE, BOARD_RESERVED, BOARD_RESERVED_PERSENTAGE)
@@ -368,3 +394,267 @@ contract DOCToken is FinalizableToken, DOCTokenConfig {
       return true;
    }
 }
+
+
+contract FlexibleTokenSale is  OpsManaged {
+
+   using Math for uint256;
+   
+   //
+   // Lifecycle
+   //
+   bool public suspended;
+
+   //
+   // Pricing
+   //
+   uint256 public tokenPrice;
+   uint256 public contributionMin;
+   uint256 public tokenConversionFactor;
+   
+   //
+   // Wallets
+   //
+   address public walletAddress;
+
+   //
+   // Token
+   //
+   FinalizableToken public token;
+   uint256 public totalToken;
+
+   //
+   // Counters
+   //
+   uint256 public totalTokensSold;
+   uint256 public totalEtherCollected;
+   //
+   // Events
+   //
+   event Initialized();
+   event TokenPriceUpdated(uint256 _newValue);
+   event TokenMinUpdated(uint256 _newValue);
+   event TotalTokenUpdated(uint256 _newValue);
+   event WalletAddressUpdated(address _newAddress);
+   event SaleSuspended();
+   event SaleResumed();
+   event TokensPurchased(address _beneficiary, uint256 _cost, uint256 _tokens);
+   event TokensReclaimed(uint256 _amount);
+
+
+   function FlexibleTokenSale(address _walletAddress) public
+      OpsManaged()
+   {
+       
+      require(_walletAddress != address(0));
+      require(_walletAddress != address(this));
+
+      walletAddress = _walletAddress;
+      
+      suspended = false;
+      tokenPrice     = 91776;
+      contributionMin     = 250;
+      totalTokensSold     = 0;
+      totalEtherCollected = 0;
+   }
+
+   // Initialize should be called by the owner as part of the deployment + setup phase.
+   // It will associate the sale contract with the token contract and perform basic checks.
+   function initialize(FinalizableToken _token) external onlyOwner returns(bool) {
+      require(address(token) == address(0));
+      require(address(_token) != address(0));
+      require(address(_token) != address(this));
+      require(address(_token) != address(walletAddress));
+      require(isOwnerOrOps(address(_token)) == false);
+      tokenConversionFactor = 10**(uint256(18).sub(_token.decimals()).add(4).add(2));
+      require(tokenConversionFactor > 0);
+      token = _token;
+
+      Initialized();
+
+      return true;
+   }
+
+
+   //
+   // Owner Configuation
+   //
+
+   // Allows the owner to change the wallet address which is used for collecting
+   // ether received during the token sale.
+   function setWalletAddress(address _walletAddress) external onlyOwner returns(bool) {
+      require(_walletAddress != address(0));
+      require(_walletAddress != address(this));
+      require(_walletAddress != address(token));
+      require(isOwnerOrOps(_walletAddress) == false);
+
+      walletAddress = _walletAddress;
+
+      WalletAddressUpdated(_walletAddress);
+
+      return true;
+   }
+
+
+   // Allows the owner to specify the conversion rate for ETH -> tokens.
+   function setTokensPrice(uint256 _tokenPrice) external onlyOwner returns(bool) {
+      require(_tokenPrice > 0);
+
+      tokenPrice = _tokenPrice;
+
+      TokenPriceUpdated(_tokenPrice);
+
+      return true;
+   }
+   
+   function setMinToken(uint256 _minToken) external onlyOwner returns(bool) {
+      require(_minToken > 0);
+
+      contributionMin = _minToken;
+
+      TokenMinUpdated(_minToken);
+
+      return true;
+   }
+   
+   function setTotalToken(uint256 _token) external  returns(bool) {
+      require(msg.sender == address(token) && _token > 0);
+
+      totalToken = totalToken.add(_token);
+
+      TokenMinUpdated(_token);
+
+      return true;
+   }
+
+   // Allows the owner to suspend the sale until it is manually resumed at a later time.
+   function suspend() external onlyOwner returns(bool) {
+      if (suspended == true) {
+          return false;
+      }
+
+      suspended = true;
+
+      SaleSuspended();
+
+      return true;
+   }
+   
+   function getSoldTokenCount() view external onlyOwner returns(uint256) {
+     return totalTokensSold;
+   }
+   
+   function getTotalTokenCount() view external onlyOwner returns(uint256) {
+     return totalToken;
+   }
+
+
+   // Allows the owner to resume the sale.
+   function resume() external onlyOwner returns(bool) {
+      if (suspended == false) {
+          return false;
+      }
+
+      suspended = false;
+
+      SaleResumed();
+
+      return true;
+   }
+
+
+   //
+   // Contributions
+   //
+
+   // Default payable function which can be used to purchase tokens.
+   function () payable public {
+      buyTokens(msg.sender);
+   }
+
+
+   // Allows the caller to purchase tokens for a specific beneficiary (proxy purchase).
+   function buyTokens(address _beneficiary) public payable returns (uint256) {
+      return buyTokensInternal(_beneficiary);
+   }
+
+
+   function buyTokensInternal(address _beneficiary) internal returns (uint256) {
+      require(!suspended);
+      
+      
+      require(_beneficiary != address(0));
+      require(_beneficiary != address(this));
+      require(_beneficiary != address(token));
+
+      // We don't want to allow the wallet collecting ETH to
+      // directly be used to purchase tokens.
+      require(msg.sender != address(walletAddress));
+
+      // Check how many tokens are still available for sale.
+      uint256 saleBalance = token.balanceOf(address(this));
+      require(saleBalance > 0);
+
+      // Calculate how many tokens the contributor could purchase based on ETH received.
+      uint256 tokens = msg.value.mul(tokenPrice).mul(10000).div(tokenConversionFactor);
+      require(tokens >= contributionMin);
+
+
+      // This is the actual amount of ETH that can be sent to the wallet.
+      uint256 contribution = msg.value;
+      walletAddress.transfer(contribution);
+
+      // Update our stats counters.
+      totalTokensSold     = totalTokensSold.add(tokens);
+      totalEtherCollected = totalEtherCollected.add(contribution);
+
+      // Transfer tokens to the beneficiary.
+      require(token.transfer(_beneficiary, tokens));
+
+      TokensPurchased(_beneficiary, contribution, tokens);
+
+      return tokens;
+   }
+
+
+   
+   function getUserTokenBalance(address _beneficiary) internal view returns (uint256) {
+      return token.balanceOf(_beneficiary);
+   }
+
+
+   // Allows the owner to take back the tokens that are assigned to the sale contract.
+   function reclaimTokens() external onlyOwner returns (bool) {
+      uint256 tokens = token.balanceOf(address(this));
+
+      if (tokens == 0) {
+         return false;
+      }
+
+      address tokenOwner = token.owner();
+      require(tokenOwner != address(0));
+
+      totalToken = totalToken.sub(tokens);
+        
+      require(token.transfer(tokenOwner, tokens));
+
+      TokensReclaimed(tokens);
+
+      return true;
+   }
+}
+
+contract DOCTokenSaleConfig {
+    address WALLET_ADDRESS = 0xbc2cd781169e83AB1Af1ab837f704d545194B52E;
+}
+
+contract DOCTokenSale is FlexibleTokenSale,DOCTokenSaleConfig {
+
+   function DOCTokenSale() public
+      FlexibleTokenSale(WALLET_ADDRESS)
+   {
+      
+   }
+
+}
+

@@ -266,6 +266,7 @@ contract FinalizableToken is ERC20Token, OpsManaged {
     using Math for uint256;
                    mapping(address=>uint) boardReservedAccount;
     FlexibleTokenSale saleToken;
+    
 
     // The constructor will assign the initial token supply to the owner (msg.sender).
     function FinalizableToken(string _name, string _symbol, uint8 _decimals, uint256 _totalSupply,address _publicReserved,uint256 _publicReservedPersentage,address[] _boardReserved,uint256[] _boardReservedPersentage) public
@@ -345,6 +346,7 @@ contract FinalizableToken is ERC20Token, OpsManaged {
         saleToken = _saleToken;
         return true;
     }
+    
 }
 
 
@@ -379,15 +381,36 @@ contract DOCToken is FinalizableToken, DOCTokenConfig {
 
     using Math for uint256;
                    event TokensReclaimed(uint256 _amount);
-
+    uint256 dividendPersentage;
+    mapping(address=>uint256) dividentAllocated;
+    event Dividend(address,uint256);
 
     function DOCToken() public
     FinalizableToken(TOKEN_NAME, TOKEN_SYMBOL, TOKEN_DECIMALS, TOKEN_TOTALSUPPLY, PUBLIC_RESERVED, PUBLIC_RESERVED_PERSENTAGE, BOARD_RESERVED, BOARD_RESERVED_PERSENTAGE)
     {
 
     }
-
-
+    
+    function claimDividendTokens() public  returns (bool) {
+        uint256 dividendBalance = balanceOf(address(this));
+        require(dividendBalance > 0);
+        require(dividentAllocated[msg.sender] == 0);
+        uint256 tokens = balances[msg.sender];
+        uint256 dividendToken = tokens.mul(dividendPersentage).div(tokenConversionFactor);
+        require(transfer(msg.sender, dividendToken));
+        dividentAllocated[msg.sender]=dividendToken;
+        Dividend(msg.sender, dividendToken);
+        return true;
+    }
+    
+    function setDividendPersentage(uint _dividendPersentage) public onlyOwner returns (bool) {
+        dividendPersentage=_dividendPersentage;
+        return true;
+    }
+    
+    function destroyToken(uint256 _value) public returns(bool){
+        return super.transfer(address(0), _value);
+    }
     // Allows the owner to reclaim tokens that have been sent to the token address itself.
     function reclaimTokens() public onlyOwner returns (bool) {
 

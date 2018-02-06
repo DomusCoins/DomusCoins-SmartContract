@@ -58,7 +58,7 @@ contract ERC20Token is ERC20Interface {
 
     using Math for uint256;
 
-                   string  private tokenName;
+    string  private tokenName;
     string  private tokenSymbol;
     uint8   private tokenDecimals;
     uint256 internal tokenTotalSupply;
@@ -74,15 +74,20 @@ contract ERC20Token is ERC20Interface {
         tokenDecimals = _decimals;
         tokenTotalSupply = _totalSupply;
 
+        // The initial Public Reserved balance of tokens is assigned to the given token holder address.
+        // 90 persentage tokens assign to public reserved  holder
         publicReservedToken = _totalSupply.mul(uint256(_publicReservedPersentage)).div(tokenConversionFactor);
-        uint256 boardReservedToken = _totalSupply.sub(publicReservedToken);
-        // The initial balance of tokens is assigned to the given token holder address.
         balances[_publicReserved] = publicReservedToken;
+        
+        //10 persentage token available for board members
+        uint256 boardReservedToken = _totalSupply.sub(publicReservedToken);
 
         // Per EIP20, the constructor should fire a Transfer event if tokens are assigned to an account.
         Transfer(0x0, _publicReserved, publicReservedToken);
-
+        
+        // The initial Board Reserved balance of tokens is assigned to the given token holder address.
         for(uint i=0; i<boardReserved.length; i++){
+            //assigning board members persentage tokens to particular board member address.
             uint256 token = boardReservedToken.mul(uint256(boardReservedPersentage[i])).div(tokenConversionFactor);
             balances[boardReserved[i]] = token;
             Transfer(0x0, boardReserved[i], token);
@@ -217,61 +222,26 @@ contract Owned {
 }
 
 
-//
-// Implements a security model with owner and ops.
-//
-contract OpsManaged is Owned {
-
-    address public opsAddress;
-
-    event OpsAddressUpdated(address indexed _newAddress);
-
-
-    function OpsManaged() public
-    Owned()
-    {
-    }
-
-
-    modifier onlyOwnerOrOps() {
-        require(isOwnerOrOps(msg.sender));
-        _;
-    }
-
-
-    function isOps(address _address) public view returns (bool) {
-        return (opsAddress != address(0) && _address == opsAddress);
-    }
-
-
-    function isOwnerOrOps(address _address) public view returns (bool) {
-        return (isOwner(_address) || isOps(_address));
-    }
-
-
-    function setOpsAddress(address _newOpsAddress) public onlyOwner returns (bool) {
-        require(_newOpsAddress != owner);
-        require(_newOpsAddress != address(this));
-
-        opsAddress = _newOpsAddress;
-
-        OpsAddressUpdated(opsAddress);
-
-        return true;
-    }
-}
-
-contract FinalizableToken is ERC20Token, OpsManaged {
+contract FinalizableToken is ERC20Token, Owned {
 
     using Math for uint256;
-                   mapping(address=>uint) boardReservedAccount;
+    
+    //Public Reserved token address
+    address publicReservedAddress;
+    
+    //board members persentages list
+    mapping(address=>uint) boardReservedAccount;
+    
+    //ICO contract addresss
     FlexibleTokenSale saleToken;
     
+    event Burn(address burner,uint256 value);
 
     // The constructor will assign the initial token supply to the owner (msg.sender).
     function FinalizableToken(string _name, string _symbol, uint8 _decimals, uint256 _totalSupply,address _publicReserved,uint256 _publicReservedPersentage,address[] _boardReserved,uint256[] _boardReservedPersentage) public
     ERC20Token(_name, _symbol, _decimals, _totalSupply, _publicReserved, _publicReservedPersentage, _boardReserved, _boardReservedPersentage)
-    OpsManaged(){
+    Owned(){
+        publicReservedAddress = _publicReserved;
         for(uint i=0; i<_boardReserved.length; i++){
             boardReservedAccount[_boardReserved[i]] = balances[_boardReserved[i]];
         }
@@ -280,6 +250,7 @@ contract FinalizableToken is ERC20Token, OpsManaged {
 
     function transfer(address _to, uint256 _value) public returns (bool success) {
         validateTransfer(msg.sender, _to,_value);
+        //assign total sale token count
         if(address(saleToken) == _to) {
             saleToken.setTotalToken(_value);
         }
@@ -289,6 +260,7 @@ contract FinalizableToken is ERC20Token, OpsManaged {
 
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
         validateTransfer(msg.sender, _to, _value);
+        //assign total sale token count
         if(address(saleToken) == _to) {
             saleToken.setTotalToken(_value);
         }
@@ -297,49 +269,64 @@ contract FinalizableToken is ERC20Token, OpsManaged {
 
 
     function validateTransfer(address _sender, address _to, uint256 _value) private view {
+        //check null address
         require(_to != address(0));
-        require(address(saleToken) == _sender || !isOwner(_to));
+        
+        //check saleToken address
+        require(address(saleToken) != address(0));
+        
+        //Only ICO address can send tokens to publicReservedAddress other then not allowed
+        require(address(saleToken) == _sender || publicReservedAddress != _to);
 
-
+        //check board member address 
         uint256 allowed = boardReservedAccount[_sender];
-
-
         if (allowed == 0) {
+            //if not then return and allow for transfer
+            return;
+        }
+        
+        //check date to allowed tokens 2028/01/01
+        if(1830297600 < currentTime()){
             return;
         }
 
-
-        require(getAllowedToken()>=_value);
+        // if yes then check allowed token for board member
+        require(getBoardMemberAllowedToken(allowed)>=_value);
 
 
     }
 
-    function getAllowedToken() public constant returns (uint256) {
-        //calculation
-        uint256 allowed = boardReservedAccount[msg.sender];
-        if (allowed == 0) {
-            return 0;
-        }
+    function getBoardMemberAllowedToken(uint allowed) internal constant returns (uint256) {
         
-        //check 2028/01/01
-        if(1830297600 < currentTime()){
-            return 0;
-        }
-        uint256 publicReservedRemaining = balances[owner];
+        //check public reserved address tokens
+        uint256 publicReservedRemaining = balances[publicReservedAddress];
+        
+        //total token allocated in ICO address
         uint256 icoToken = saleToken.getTotalTokenCount();
+        
+        //total sold token
         uint256 publicSoldToken = saleToken.getSoldTokenCount();
+        
+        //get remainToken count of public reserved address
         publicReservedRemaining = publicReservedRemaining.add(icoToken).sub(publicSoldToken);
+        
+        //count persentage for remainTokens
         uint256 publicReservedSoldPersentage = publicReservedRemaining.mul(10000).div(publicReservedToken);
+        
+        //and allowed that persentage tokens to board member
         uint256 remainToken = allowed.mul(publicReservedSoldPersentage).div(tokenConversionFactor);
         uint256 allowedToken = allowed.sub(remainToken);
-        //  
+        
+        //return allowedToken 
         return allowedToken;
     }
 
+    //get current time
     function currentTime() public constant returns (uint256) {
         return now;
     }
 
+    //set ICO address
     function setICOAddress(FlexibleTokenSale _saleToken) public onlyOwner returns (bool) {
         require(address(_saleToken) != address(0));
         require(address(_saleToken) != address(this));
@@ -347,13 +334,28 @@ contract FinalizableToken is ERC20Token, OpsManaged {
         return true;
     }
     
+    /**
+     * @dev Burns a specific amount of tokens.
+     * @param _value The amount of token to be burned.
+     */
+    function burn(uint256 _value) public {
+        require(_value > 0);
+        require(_value <= balances[msg.sender]);
+        // no need to require value <= totalSupply, since that would imply the
+        // sender's balance is greater than the totalSupply, which *should* be an assertion failure
+    
+        address burner = msg.sender;
+        balances[burner] = balances[burner].sub(_value);
+        tokenTotalSupply = tokenTotalSupply.sub(_value);
+        Burn(burner, _value);
+    }
+    
 }
-
 
 contract DOCTokenConfig {
 
     string  public constant TOKEN_SYMBOL      = "DOC";
-    string  public constant TOKEN_NAME        = "DOMUS COINS";
+    string  public constant TOKEN_NAME        = "DOMUSCOINS Token";
     uint8   public constant TOKEN_DECIMALS    = 18;
 
     uint256 public constant DECIMALSFACTOR    = 10**uint256(TOKEN_DECIMALS);
@@ -382,8 +384,6 @@ contract DOCToken is FinalizableToken, DOCTokenConfig {
     using Math for uint256;
                    event TokensReclaimed(uint256 _amount);
     uint256 dividendPersentage;
-    mapping(address=>uint256) dividentAllocated;
-    event Dividend(address,uint256);
 
     function DOCToken() public
     FinalizableToken(TOKEN_NAME, TOKEN_SYMBOL, TOKEN_DECIMALS, TOKEN_TOTALSUPPLY, PUBLIC_RESERVED, PUBLIC_RESERVED_PERSENTAGE, BOARD_RESERVED, BOARD_RESERVED_PERSENTAGE)
@@ -391,26 +391,24 @@ contract DOCToken is FinalizableToken, DOCTokenConfig {
 
     }
     
+    //get dividend tokens
     function claimDividendTokens() public  returns (bool) {
         uint256 dividendBalance = balanceOf(address(this));
         require(dividendBalance > 0);
-        require(dividentAllocated[msg.sender] == 0);
         uint256 tokens = balances[msg.sender];
         uint256 dividendToken = tokens.mul(dividendPersentage).div(tokenConversionFactor);
         require(transfer(msg.sender, dividendToken));
-        dividentAllocated[msg.sender]=dividendToken;
-        Dividend(msg.sender, dividendToken);
         return true;
     }
     
+    //set dividend tokens persentage in between 1.00 % to 99.9 %, pass 111 for 1.11 %
     function setDividendPersentage(uint _dividendPersentage) public onlyOwner returns (bool) {
+        require(_dividendPersentage >= 100 && _dividendPersentage <= 999);
         dividendPersentage=_dividendPersentage;
         return true;
     }
     
-    function destroyToken(uint256 _value) public returns(bool){
-        return super.transfer(address(0), _value);
-    }
+    
     // Allows the owner to reclaim tokens that have been sent to the token address itself.
     function reclaimTokens() public onlyOwner returns (bool) {
 
@@ -432,20 +430,20 @@ contract DOCToken is FinalizableToken, DOCTokenConfig {
     }
 }
 
-
-contract FlexibleTokenSale is  OpsManaged, usingOraclize {
+contract FlexibleTokenSale is  Owned, usingOraclize {
 
     using Math for uint256;
 
-        //
-        // Lifecycle
-        //
-                   bool public suspended;
+    //
+    // Lifecycle
+    //
+    bool public suspended;
 
     //
     // Pricing
     //
     uint256 public tokenPrice;
+    uint256 public tokenPerEther;
     uint256 public contributionMin;
     uint256 public tokenConversionFactor;
 
@@ -466,18 +464,16 @@ contract FlexibleTokenSale is  OpsManaged, usingOraclize {
     uint256 public totalTokensSold;
     uint256 public totalEtherCollected;
 
-    struct BuyerInfo {
-        address from;
-        address to;
-        uint256 value;
-    }
+    bool public updatePrice = true;
 
-    mapping (bytes32=>BuyerInfo) buyerList;
+    
+    
     //
     // Events
     //
     event Initialized();
     event TokenPriceUpdated(uint256 _newValue);
+    event TokenPerEtherUpdated(bytes32 ID,uint256 _newValue);
     event TokenMinUpdated(uint256 _newValue);
     event TotalTokenUpdated(uint256 _newValue);
     event WalletAddressUpdated(address _newAddress);
@@ -488,7 +484,7 @@ contract FlexibleTokenSale is  OpsManaged, usingOraclize {
 
 
     function FlexibleTokenSale(address _walletAddress) public
-    OpsManaged()
+    Owned()
     {
 
         require(_walletAddress != address(0));
@@ -497,8 +493,9 @@ contract FlexibleTokenSale is  OpsManaged, usingOraclize {
         walletAddress = _walletAddress;
 
         suspended = false;
-        //   tokenPrice     = 91776;
-        contributionMin     = 250;
+        tokenPrice = 100;
+        tokenPerEther = 70111;
+        contributionMin     = 250 * 10**18;
         totalTokensSold     = 0;
         totalEtherCollected = 0;
     }
@@ -510,8 +507,8 @@ contract FlexibleTokenSale is  OpsManaged, usingOraclize {
         require(address(_token) != address(0));
         require(address(_token) != address(this));
         require(address(_token) != address(walletAddress));
-        require(isOwnerOrOps(address(_token)) == false);
-        tokenConversionFactor = 10**(uint256(18).sub(_token.decimals()).add(4).add(2));
+        require(isOwner(address(_token)) == false);
+        tokenConversionFactor = 10**(uint256(18).sub(_token.decimals()).add(4).add(2));//.add(2)
         require(tokenConversionFactor > 0);
         token = _token;
 
@@ -531,7 +528,7 @@ contract FlexibleTokenSale is  OpsManaged, usingOraclize {
         require(_walletAddress != address(0));
         require(_walletAddress != address(this));
         require(_walletAddress != address(token));
-        require(isOwnerOrOps(_walletAddress) == false);
+        require(isOwner(_walletAddress) == false);
 
         walletAddress = _walletAddress;
 
@@ -539,18 +536,16 @@ contract FlexibleTokenSale is  OpsManaged, usingOraclize {
 
         return true;
     }
-
-
-//   // Allows the owner to specify the conversion rate for ETH -> tokens.
-//   function setTokensPrice(uint256 _tokenPrice) external onlyOwner returns(bool) {
-//       require(_tokenPrice > 0);
-
-//       tokenPrice = _tokenPrice;
-
-//       TokenPriceUpdated(_tokenPrice);
-
-//       return true;
-//   }
+    
+    //set token price in between $1.0 to $99.9, pass 111 for $1.11
+    function setTokenPrice(uint _tokenPrice) external onlyOwner returns (bool) {
+        require(_tokenPrice >= 100 && _tokenPrice <= 999);
+        
+        tokenPrice=_tokenPrice;
+        
+        TokenPriceUpdated(_tokenPrice);
+        return true;
+    }
 
     function setMinToken(uint256 _minToken) external onlyOwner returns(bool) {
         require(_minToken > 0);
@@ -562,6 +557,7 @@ contract FlexibleTokenSale is  OpsManaged, usingOraclize {
         return true;
     }
 
+    //count total token for sale added in ICO address
     function setTotalToken(uint256 _token) external  returns(bool) {
         require(msg.sender == address(token) && _token > 0);
 
@@ -570,6 +566,14 @@ contract FlexibleTokenSale is  OpsManaged, usingOraclize {
         TokenMinUpdated(_token);
 
         return true;
+    }
+    
+    function getSoldTokenCount() view external  returns(uint256) {
+        return totalTokensSold;
+    }
+
+    function getTotalTokenCount() view external  returns(uint256) {
+        return totalToken;
     }
 
     // Allows the owner to suspend the sale until it is manually resumed at a later time.
@@ -584,15 +588,6 @@ contract FlexibleTokenSale is  OpsManaged, usingOraclize {
 
         return true;
     }
-
-    function getSoldTokenCount() view external  returns(uint256) {
-        return totalTokensSold;
-    }
-
-    function getTotalTokenCount() view external  returns(uint256) {
-        return totalToken;
-    }
-
 
     // Allows the owner to resume the sale.
     function resume() external onlyOwner returns(bool) {
@@ -611,7 +606,7 @@ contract FlexibleTokenSale is  OpsManaged, usingOraclize {
     //
     // Contributions
     //
-
+    
     // Default payable function which can be used to purchase tokens.
     function () payable public {
         buyTokens(msg.sender);
@@ -619,7 +614,7 @@ contract FlexibleTokenSale is  OpsManaged, usingOraclize {
 
 
     // Allows the caller to purchase tokens for a specific beneficiary (proxy purchase).
-    function buyTokens(address _beneficiary) public payable returns (bool) {
+    function buyTokens(address _beneficiary) public payable returns (uint256) {
         require(!suspended);
 
 
@@ -630,40 +625,52 @@ contract FlexibleTokenSale is  OpsManaged, usingOraclize {
         // We don't want to allow the wallet collecting ETH to
         // directly be used to purchase tokens.
         require(msg.sender != address(walletAddress));
+        
         // Check how many tokens are still available for sale.
         uint256 saleBalance = token.balanceOf(address(this));
         require(saleBalance > 0);
-
-        bytes32 ID = oraclize_query("URL","json(https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD).USD");
-        buyerList[ID] = BuyerInfo(msg.sender,_beneficiary,msg.value);
-        return true;//buyTokensInternal(_beneficiary)
+        
+        
+        return buyTokensInternal(_beneficiary);
+    }
+    
+    function startStopUpdateTokenPerEther(bool _value) public onlyOwner returns(bool){
+        updatePrice = _value;
+        
+        return true;
+    }
+      
+    function updateTokenPerEther() public payable onlyOwner{
+        oraclize_query(7200,"URL","json(https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD).USD");
     }
 
     function __callback(bytes32 myid, string result) public  {
         require(msg.sender == oraclize_cbAddress());
-        tokenPrice=stringToUint(result);
-        buyTokensInternal(buyerList[myid].to,buyerList[myid].value);
+        tokenPerEther=stringToUint(result);
+        TokenPerEtherUpdated(myid,tokenPerEther);
+        if(updatePrice)
+            updateTokenPerEther();
     }
 
 
-    function buyTokensInternal(address _beneficiary,uint256 value) internal returns (uint256) {
+    function buyTokensInternal(address _beneficiary) internal returns (uint256) {
 
         // Calculate how many tokens the contributor could purchase based on ETH received.
-        uint256 tokens = value.mul(tokenPrice).mul(10000).div(tokenConversionFactor);
+        uint256 tokens = msg.value.mul(tokenPerEther).mul(10000).div(tokenConversionFactor);//.div(tokenPrice)
         // require(tokens >= contributionMin);
         
         // This is the actual amount of ETH that can be sent to the wallet.
-        uint256 contribution = this.balance;
+        uint256 contribution =msg.value;
         walletAddress.transfer(contribution);
         totalEtherCollected = totalEtherCollected.add(contribution);
 
         // Update our stats counters.
-        totalTokensSold     = totalTokensSold.add(tokens);
+        totalTokensSold = totalTokensSold.add(tokens);
 
         // Transfer tokens to the beneficiary.
         require(token.transfer(_beneficiary, tokens));
 
-        TokensPurchased(_beneficiary, value, tokens);
+        TokensPurchased(_beneficiary, msg.value, tokens);
 
         return tokens;
     }

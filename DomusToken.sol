@@ -221,7 +221,6 @@ contract Owned {
     }
 }
 
-
 contract FinalizableToken is ERC20Token, Owned {
 
     using Math for uint256;
@@ -361,19 +360,19 @@ contract DOCTokenConfig {
     uint256 public constant DECIMALSFACTOR    = 10**uint256(TOKEN_DECIMALS);
     uint256 public constant TOKEN_TOTALSUPPLY = 1000000000 * DECIMALSFACTOR;
 
-    address public constant PUBLIC_RESERVED = 0xbc2cd781169e83AB1Af1ab837f704d545194B52E;
+    address public constant PUBLIC_RESERVED = 0xB0327663Fc10DD843D3D2C35b18a08DD6DC5F68e;
     uint256 public constant PUBLIC_RESERVED_PERSENTAGE = 9000;
 
-    address[] public BOARD_RESERVED = [ 0xc773ca08704EB9C03416c0514945DDeEB74F098A,
-        0x9bdB2652f7add45Fdb10D23DD68363DDF09F1550,
-        0x6BfefB1D11fFC09041CEE721bd1e3EA6Ac103011,
-        0xE2Fe7E2fc2122646a3F5a73a92f6D690B41173EE,
-        0xf19bdeAad7D3AEc3A986A97d81Aa66084D65E0f5,
-        0xA103c3e2483f63B66dec50239a418115884C9836,
-        0xF94Fac0D7062AFA3b7Ec9A3B354485ACE9a3A5CB,
-        0x191B2a493FaaC287bCC1D9a5c82D4C294809a91a,
-        0xf541869c9b5D2e70eC360bf7Cb6Db09aDa8aa2c3,
-        0x75Df6E47ED074314Ca57A4D665B48FD5dE0B41cb];
+    address[] public BOARD_RESERVED = [ 0xa265686DF1B9e58d7248D18Be080b80A63EC2235,
+        0x4a6a43Ae8ed7D73E37fEE430EE96b5c0fa31DC29,
+        0xd5B7A6abA7883647809A21145ba3c5EDE709ed03,
+        0x4BF38EA21dCFdB0DA13E512dB0B99006B86D3b8b,
+        0xD39D8D0d8D9F586eAD0771825a6897A287A81Ab3,
+        0xc369d344691BC695D10675efB3aFF64ed50fcEA7,
+        0xb0Cc1b28D5C265D64a0111C8101ca43AfF923B50,
+        0xF4a8ce826F5706343eE35009AA760B402a397c98,
+        0x3468aDd6b7f3569F725189d8c1161fef863D326f,
+        0x3C0f85690B06139ba701Cc002Ab48490B2ad5665];
 
     uint256[] public BOARD_RESERVED_PERSENTAGE = [2000,2000,2000,1000,1000,500,500,400,300,300];
 
@@ -495,7 +494,7 @@ contract FlexibleTokenSale is  Owned, usingOraclize {
         suspended = false;
         tokenPrice = 100;
         tokenPerEther = 70111;
-        contributionMin     = 250 * 10**18;
+        contributionMin     = 5 * 10**18;
         totalTokensSold     = 0;
         totalEtherCollected = 0;
     }
@@ -508,7 +507,7 @@ contract FlexibleTokenSale is  Owned, usingOraclize {
         require(address(_token) != address(this));
         require(address(_token) != address(walletAddress));
         require(isOwner(address(_token)) == false);
-        tokenConversionFactor = 10**(uint256(18).sub(_token.decimals()).add(4).add(2));//.add(2)
+        tokenConversionFactor = 10**(uint256(18).sub(_token.decimals()).add(4).add(2));
         require(tokenConversionFactor > 0);
         token = _token;
 
@@ -640,7 +639,8 @@ contract FlexibleTokenSale is  Owned, usingOraclize {
         return true;
     }
       
-    function updateTokenPerEther() public payable onlyOwner{
+    function updateTokenPerEther() public payable {
+        require(msg.sender == address(this) || msg.sender == onlyOwner)
         oraclize_query(7200,"URL","json(https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD).USD");
     }
 
@@ -656,8 +656,9 @@ contract FlexibleTokenSale is  Owned, usingOraclize {
     function buyTokensInternal(address _beneficiary) internal returns (uint256) {
 
         // Calculate how many tokens the contributor could purchase based on ETH received.
-        uint256 tokens = msg.value.mul(tokenPerEther).mul(10000).div(tokenConversionFactor);//.div(tokenPrice)
-        // require(tokens >= contributionMin);
+       
+         uint256 tokens =msg.value.mul(tokenPerEther.mul(100).div(tokenPrice)).mul(10000).div(tokenConversionFactor);
+         require(tokens >= contributionMin);
         
         // This is the actual amount of ETH that can be sent to the wallet.
         uint256 contribution =msg.value;
@@ -724,7 +725,8 @@ contract FlexibleTokenSale is  Owned, usingOraclize {
 }
 
 contract DOCTokenSaleConfig {
-    address WALLET_ADDRESS = 0xbc2cd781169e83AB1Af1ab837f704d545194B52E;
+    address WALLET_ADDRESS = 0xB0327663Fc10DD843D3D2C35b18a08DD6DC5F68e;
+    
 }
 
 contract DOCTokenSale is FlexibleTokenSale,DOCTokenSaleConfig {

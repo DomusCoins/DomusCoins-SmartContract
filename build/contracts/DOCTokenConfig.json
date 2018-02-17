@@ -1,0 +1,1050 @@
+{
+  "contractName": "DOCTokenConfig",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "TOKEN_NAME",
+      "outputs": [
+        {
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "PUBLIC_RESERVED_PERSENTAGE",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "TOKEN_SYMBOL",
+      "outputs": [
+        {
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "TOKEN_DECIMALS",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "TOKEN_TOTALSUPPLY",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "DECIMALSFACTOR",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "PUBLIC_RESERVED",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "BOARD_RESERVED",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "BOARD_RESERVED_PERSENTAGE",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x60606040526101406040519081016040528073a265686df1b9e58d7248d18be080b80a63ec223573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001734a6a43ae8ed7d73e37fee430ee96b5c0fa31dc2973ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200173d5b7a6aba7883647809a21145ba3c5ede709ed0373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001734bf38ea21dcfdb0da13e512db0b99006b86d3b8b73ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200173d39d8d0d8d9f586ead0771825a6897a287a81ab373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200173c369d344691bc695d10675efb3aff64ed50fcea773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200173b0cc1b28d5c265d64a0111c8101ca43aff923b5073ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200173f4a8ce826f5706343ee35009aa760b402a397c9873ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001733468add6b7f3569f725189d8c1161fef863d326f73ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001733c0f85690b06139ba701cc002ab48490b2ad566573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815250600090600a6102db929190610380565b50610140604051908101604052806107d061ffff1681526020016107d061ffff1681526020016107d061ffff1681526020016103e861ffff1681526020016103e861ffff1681526020016101f461ffff1681526020016101f461ffff16815260200161019061ffff16815260200161012c61ffff16815260200161012c61ffff16815250600190600a61036f92919061040a565b50341561037b57600080fd5b6104c5565b8280548282559060005260206000209081019282156103f9579160200282015b828111156103f85782518260006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550916020019190600101906103a0565b5b509050610406919061045d565b5090565b82805482825590600052602060002090810192821561044c579160200282015b8281111561044b578251829061ffff1690559160200191906001019061042a565b5b50905061045991906104a0565b5090565b61049d91905b8082111561049957600081816101000a81549073ffffffffffffffffffffffffffffffffffffffff021916905550600101610463565b5090565b90565b6104c291905b808211156104be5760008160009055506001016104a6565b5090565b90565b610493806104d46000396000f300606060405260043610610099576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063188214001461009e5780631b6885651461012c5780632a905318146101555780635b7f415c146101e357806374c950fb146102125780638bc04eb71461023b5780638be4886c14610264578063b9674327146102b9578063bb1d660c1461031c575b600080fd5b34156100a957600080fd5b6100b1610353565b6040518080602001828103825283818151815260200191508051906020019080838360005b838110156100f15780820151818401526020810190506100d6565b50505050905090810190601f16801561011e5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b341561013757600080fd5b61013f61038c565b6040518082815260200191505060405180910390f35b341561016057600080fd5b610168610392565b6040518080602001828103825283818151815260200191508051906020019080838360005b838110156101a857808201518184015260208101905061018d565b50505050905090810190601f1680156101d55780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34156101ee57600080fd5b6101f66103cb565b604051808260ff1660ff16815260200191505060405180910390f35b341561021d57600080fd5b6102256103d0565b6040518082815260200191505060405180910390f35b341561024657600080fd5b61024e6103e1565b6040518082815260200191505060405180910390f35b341561026f57600080fd5b6102776103ec565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34156102c457600080fd5b6102da6004808035906020019091905050610404565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b341561032757600080fd5b61033d6004808035906020019091905050610443565b6040518082815260200191505060405180910390f35b6040805190810160405280601081526020017f444f4d5553434f494e5320546f6b656e0000000000000000000000000000000081525081565b61232881565b6040805190810160405280600381526020017f444f43000000000000000000000000000000000000000000000000000000000081525081565b601281565b601260ff16600a0a633b9aca000281565b601260ff16600a0a81565b73b0327663fc10dd843d3d2c35b18a08dd6dc5f68e81565b60008181548110151561041357fe5b90600052602060002090016000915054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60018181548110151561045257fe5b906000526020600020900160009150905054815600a165627a7a723058208f11bdd3e7d9a7966591c29d5f32aff6850809103d48395ae7b5bb628fcad04d0029",
+  "deployedBytecode": "0x606060405260043610610099576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063188214001461009e5780631b6885651461012c5780632a905318146101555780635b7f415c146101e357806374c950fb146102125780638bc04eb71461023b5780638be4886c14610264578063b9674327146102b9578063bb1d660c1461031c575b600080fd5b34156100a957600080fd5b6100b1610353565b6040518080602001828103825283818151815260200191508051906020019080838360005b838110156100f15780820151818401526020810190506100d6565b50505050905090810190601f16801561011e5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b341561013757600080fd5b61013f61038c565b6040518082815260200191505060405180910390f35b341561016057600080fd5b610168610392565b6040518080602001828103825283818151815260200191508051906020019080838360005b838110156101a857808201518184015260208101905061018d565b50505050905090810190601f1680156101d55780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34156101ee57600080fd5b6101f66103cb565b604051808260ff1660ff16815260200191505060405180910390f35b341561021d57600080fd5b6102256103d0565b6040518082815260200191505060405180910390f35b341561024657600080fd5b61024e6103e1565b6040518082815260200191505060405180910390f35b341561026f57600080fd5b6102776103ec565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34156102c457600080fd5b6102da6004808035906020019091905050610404565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b341561032757600080fd5b61033d6004808035906020019091905050610443565b6040518082815260200191505060405180910390f35b6040805190810160405280601081526020017f444f4d5553434f494e5320546f6b656e0000000000000000000000000000000081525081565b61232881565b6040805190810160405280600381526020017f444f43000000000000000000000000000000000000000000000000000000000081525081565b601281565b601260ff16600a0a633b9aca000281565b601260ff16600a0a81565b73b0327663fc10dd843d3d2c35b18a08dd6dc5f68e81565b60008181548110151561041357fe5b90600052602060002090016000915054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60018181548110151561045257fe5b906000526020600020900160009150905054815600a165627a7a723058208f11bdd3e7d9a7966591c29d5f32aff6850809103d48395ae7b5bb628fcad04d0029",
+  "sourceMap": "26:1129:1:-;;;542:511;;;;;;;;;578:42;542:511;;;;;;;;626:42;542:511;;;;;;;;674:42;542:511;;;;;;;;722:42;542:511;;;;;;;;770:42;542:511;;;;;;;;818:42;542:511;;;;;;;;866:42;542:511;;;;;;;;914:42;542:511;;;;;;;;962:42;542:511;;;;;;;;1010:42;542:511;;;;;;;;;;;;;;;:::i;:::-;;1060:91;;;;;;;;;1106:4;1060:91;;;;;;1111:4;1060:91;;;;;;1116:4;1060:91;;;;;;1121:4;1060:91;;;;;;1126:4;1060:91;;;;;;1131:3;1060:91;;;;;;1135:3;1060:91;;;;;;1139:3;1060:91;;;;;;1143:3;1060:91;;;;;;1147:3;1060:91;;;;;;;;;;;;;:::i;:::-;;26:1129;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;",
+  "deployedSourceMap": "26:1129:1:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;112:62;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:2;8:100;;;99:1;94:3;90;84:5;80:1;75:3;71;64:6;52:2;49:1;45:3;40:15;;8:100;;;12:14;3:109;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;478:57:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;57:49;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:2;8:100;;;99:1;94:3;90;84:5;80:1;75:3;71;64:6;52:2;49:1;45:3;40:15;;8:100;;;12:14;3:109;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;180:46:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;310:71;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;233;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;388:84;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;542:511;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1060:91;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;112:62;;;;;;;;;;;;;;;;;;;;:::o;478:57::-;531:4;478:57;:::o;57:49::-;;;;;;;;;;;;;;;;;;;;:::o;180:46::-;224:2;180:46;:::o;310:71::-;224:2;281:23;;277:2;:27;354:10;:27;310:71;:::o;233:::-;224:2;281:23;;277:2;:27;233:71;:::o;388:84::-;430:42;388:84;:::o;542:511::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;1060:91::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o",
+  "source": "pragma solidity ^0.4.19;\n\ncontract DOCTokenConfig {\n\n    string  public constant TOKEN_SYMBOL      = \"DOC\";\n    string  public constant TOKEN_NAME        = \"DOMUSCOINS Token\";\n    uint8   public constant TOKEN_DECIMALS    = 18;\n\n    uint256 public constant DECIMALSFACTOR    = 10**uint256(TOKEN_DECIMALS);\n    uint256 public constant TOKEN_TOTALSUPPLY = 1000000000 * DECIMALSFACTOR;\n\n    address public constant PUBLIC_RESERVED = 0xB0327663Fc10DD843D3D2C35b18a08DD6DC5F68e;\n    uint256 public constant PUBLIC_RESERVED_PERSENTAGE = 9000;\n\n    address[] public BOARD_RESERVED = [ 0xa265686DF1B9e58d7248D18Be080b80A63EC2235,\n    0x4a6a43Ae8ed7D73E37fEE430EE96b5c0fa31DC29,\n    0xd5B7A6abA7883647809A21145ba3c5EDE709ed03,\n    0x4BF38EA21dCFdB0DA13E512dB0B99006B86D3b8b,\n    0xD39D8D0d8D9F586eAD0771825a6897A287A81Ab3,\n    0xc369d344691BC695D10675efB3aFF64ed50fcEA7,\n    0xb0Cc1b28D5C265D64a0111C8101ca43AfF923B50,\n    0xF4a8ce826F5706343eE35009AA760B402a397c98,\n    0x3468aDd6b7f3569F725189d8c1161fef863D326f,\n    0x3C0f85690B06139ba701Cc002Ab48490B2ad5665];\n\n    uint256[] public BOARD_RESERVED_PERSENTAGE = [2000,2000,2000,1000,1000,500,500,400,300,300];\n\n}",
+  "sourcePath": "/var/www/html/erToken/contracts/DOCTokenConfig.sol",
+  "ast": {
+    "attributes": {
+      "absolutePath": "/var/www/html/erToken/contracts/DOCTokenConfig.sol",
+      "exportedSymbols": {
+        "DOCTokenConfig": [
+          148
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.4",
+            ".19"
+          ]
+        },
+        "id": 92,
+        "name": "PragmaDirective",
+        "src": "0:24:1"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": true,
+          "linearizedBaseContracts": [
+            148
+          ],
+          "name": "DOCTokenConfig",
+          "scope": 149
+        },
+        "children": [
+          {
+            "attributes": {
+              "constant": true,
+              "name": "TOKEN_SYMBOL",
+              "scope": 148,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "string memory",
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "string",
+                  "type": "string storage pointer"
+                },
+                "id": 93,
+                "name": "ElementaryTypeName",
+                "src": "57:6:1"
+              },
+              {
+                "attributes": {
+                  "argumentTypes": null,
+                  "hexvalue": "444f43",
+                  "isConstant": false,
+                  "isLValue": false,
+                  "isPure": true,
+                  "lValueRequested": false,
+                  "subdenomination": null,
+                  "token": "string",
+                  "type": "literal_string \"DOC\"",
+                  "value": "DOC"
+                },
+                "id": 94,
+                "name": "Literal",
+                "src": "101:5:1"
+              }
+            ],
+            "id": 95,
+            "name": "VariableDeclaration",
+            "src": "57:49:1"
+          },
+          {
+            "attributes": {
+              "constant": true,
+              "name": "TOKEN_NAME",
+              "scope": 148,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "string memory",
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "string",
+                  "type": "string storage pointer"
+                },
+                "id": 96,
+                "name": "ElementaryTypeName",
+                "src": "112:6:1"
+              },
+              {
+                "attributes": {
+                  "argumentTypes": null,
+                  "hexvalue": "444f4d5553434f494e5320546f6b656e",
+                  "isConstant": false,
+                  "isLValue": false,
+                  "isPure": true,
+                  "lValueRequested": false,
+                  "subdenomination": null,
+                  "token": "string",
+                  "type": "literal_string \"DOMUSCOINS Token\"",
+                  "value": "DOMUSCOINS Token"
+                },
+                "id": 97,
+                "name": "Literal",
+                "src": "156:18:1"
+              }
+            ],
+            "id": 98,
+            "name": "VariableDeclaration",
+            "src": "112:62:1"
+          },
+          {
+            "attributes": {
+              "constant": true,
+              "name": "TOKEN_DECIMALS",
+              "scope": 148,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "uint8",
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "uint8",
+                  "type": "uint8"
+                },
+                "id": 99,
+                "name": "ElementaryTypeName",
+                "src": "180:5:1"
+              },
+              {
+                "attributes": {
+                  "argumentTypes": null,
+                  "hexvalue": "3138",
+                  "isConstant": false,
+                  "isLValue": false,
+                  "isPure": true,
+                  "lValueRequested": false,
+                  "subdenomination": null,
+                  "token": "number",
+                  "type": "int_const 18",
+                  "value": "18"
+                },
+                "id": 100,
+                "name": "Literal",
+                "src": "224:2:1"
+              }
+            ],
+            "id": 101,
+            "name": "VariableDeclaration",
+            "src": "180:46:1"
+          },
+          {
+            "attributes": {
+              "constant": true,
+              "name": "DECIMALSFACTOR",
+              "scope": 148,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "uint256",
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "uint256",
+                  "type": "uint256"
+                },
+                "id": 102,
+                "name": "ElementaryTypeName",
+                "src": "233:7:1"
+              },
+              {
+                "attributes": {
+                  "argumentTypes": null,
+                  "commonType": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "isConstant": false,
+                  "isLValue": false,
+                  "isPure": true,
+                  "lValueRequested": false,
+                  "operator": "**",
+                  "type": "uint256"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "3130",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "int_const 10",
+                      "value": "10"
+                    },
+                    "id": 103,
+                    "name": "Literal",
+                    "src": "277:2:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "isStructConstructorCall": false,
+                      "lValueRequested": false,
+                      "names": [
+                        null
+                      ],
+                      "type": "uint256",
+                      "type_conversion": true
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_uint8",
+                              "typeString": "uint8"
+                            }
+                          ],
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "lValueRequested": false,
+                          "type": "type(uint256)",
+                          "value": "uint256"
+                        },
+                        "id": 104,
+                        "name": "ElementaryTypeNameExpression",
+                        "src": "281:7:1"
+                      },
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "overloadedDeclarations": [
+                            null
+                          ],
+                          "referencedDeclaration": 101,
+                          "type": "uint8",
+                          "value": "TOKEN_DECIMALS"
+                        },
+                        "id": 105,
+                        "name": "Identifier",
+                        "src": "289:14:1"
+                      }
+                    ],
+                    "id": 106,
+                    "name": "FunctionCall",
+                    "src": "281:23:1"
+                  }
+                ],
+                "id": 107,
+                "name": "BinaryOperation",
+                "src": "277:27:1"
+              }
+            ],
+            "id": 108,
+            "name": "VariableDeclaration",
+            "src": "233:71:1"
+          },
+          {
+            "attributes": {
+              "constant": true,
+              "name": "TOKEN_TOTALSUPPLY",
+              "scope": 148,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "uint256",
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "uint256",
+                  "type": "uint256"
+                },
+                "id": 109,
+                "name": "ElementaryTypeName",
+                "src": "310:7:1"
+              },
+              {
+                "attributes": {
+                  "argumentTypes": null,
+                  "commonType": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "isConstant": false,
+                  "isLValue": false,
+                  "isPure": true,
+                  "lValueRequested": false,
+                  "operator": "*",
+                  "type": "uint256"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "31303030303030303030",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "int_const 1000000000",
+                      "value": "1000000000"
+                    },
+                    "id": 110,
+                    "name": "Literal",
+                    "src": "354:10:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "overloadedDeclarations": [
+                        null
+                      ],
+                      "referencedDeclaration": 108,
+                      "type": "uint256",
+                      "value": "DECIMALSFACTOR"
+                    },
+                    "id": 111,
+                    "name": "Identifier",
+                    "src": "367:14:1"
+                  }
+                ],
+                "id": 112,
+                "name": "BinaryOperation",
+                "src": "354:27:1"
+              }
+            ],
+            "id": 113,
+            "name": "VariableDeclaration",
+            "src": "310:71:1"
+          },
+          {
+            "attributes": {
+              "constant": true,
+              "name": "PUBLIC_RESERVED",
+              "scope": 148,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "address",
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "address",
+                  "type": "address"
+                },
+                "id": 114,
+                "name": "ElementaryTypeName",
+                "src": "388:7:1"
+              },
+              {
+                "attributes": {
+                  "argumentTypes": null,
+                  "hexvalue": "307842303332373636334663313044443834334433443243333562313861303844443644433546363865",
+                  "isConstant": false,
+                  "isLValue": false,
+                  "isPure": true,
+                  "lValueRequested": false,
+                  "subdenomination": null,
+                  "token": "number",
+                  "type": "address",
+                  "value": "0xB0327663Fc10DD843D3D2C35b18a08DD6DC5F68e"
+                },
+                "id": 115,
+                "name": "Literal",
+                "src": "430:42:1"
+              }
+            ],
+            "id": 116,
+            "name": "VariableDeclaration",
+            "src": "388:84:1"
+          },
+          {
+            "attributes": {
+              "constant": true,
+              "name": "PUBLIC_RESERVED_PERSENTAGE",
+              "scope": 148,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "uint256",
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "uint256",
+                  "type": "uint256"
+                },
+                "id": 117,
+                "name": "ElementaryTypeName",
+                "src": "478:7:1"
+              },
+              {
+                "attributes": {
+                  "argumentTypes": null,
+                  "hexvalue": "39303030",
+                  "isConstant": false,
+                  "isLValue": false,
+                  "isPure": true,
+                  "lValueRequested": false,
+                  "subdenomination": null,
+                  "token": "number",
+                  "type": "int_const 9000",
+                  "value": "9000"
+                },
+                "id": 118,
+                "name": "Literal",
+                "src": "531:4:1"
+              }
+            ],
+            "id": 119,
+            "name": "VariableDeclaration",
+            "src": "478:57:1"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "BOARD_RESERVED",
+              "scope": 148,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "address[] storage ref",
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "length": null,
+                  "type": "address[] storage pointer"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "address",
+                      "type": "address"
+                    },
+                    "id": 120,
+                    "name": "ElementaryTypeName",
+                    "src": "542:7:1"
+                  }
+                ],
+                "id": 121,
+                "name": "ArrayTypeName",
+                "src": "542:9:1"
+              },
+              {
+                "attributes": {
+                  "argumentTypes": null,
+                  "isConstant": false,
+                  "isInlineArray": true,
+                  "isLValue": false,
+                  "isPure": true,
+                  "lValueRequested": false,
+                  "type": "address[10] memory"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "307861323635363836444631423965353864373234384431384265303830623830413633454332323335",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "address",
+                      "value": "0xa265686DF1B9e58d7248D18Be080b80A63EC2235"
+                    },
+                    "id": 122,
+                    "name": "Literal",
+                    "src": "578:42:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "307834613661343341653865643744373345333766454534333045453936623563306661333144433239",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "address",
+                      "value": "0x4a6a43Ae8ed7D73E37fEE430EE96b5c0fa31DC29"
+                    },
+                    "id": 123,
+                    "name": "Literal",
+                    "src": "626:42:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "307864354237413661624137383833363437383039413231313435626133633545444537303965643033",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "address",
+                      "value": "0xd5B7A6abA7883647809A21145ba3c5EDE709ed03"
+                    },
+                    "id": 124,
+                    "name": "Literal",
+                    "src": "674:42:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "307834424633384541323164434664423044413133453531326442304239393030364238364433623862",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "address",
+                      "value": "0x4BF38EA21dCFdB0DA13E512dB0B99006B86D3b8b"
+                    },
+                    "id": 125,
+                    "name": "Literal",
+                    "src": "722:42:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "307844333944384430643844394635383665414430373731383235613638393741323837413831416233",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "address",
+                      "value": "0xD39D8D0d8D9F586eAD0771825a6897A287A81Ab3"
+                    },
+                    "id": 126,
+                    "name": "Literal",
+                    "src": "770:42:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "307863333639643334343639314243363935443130363735656642336146463634656435306663454137",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "address",
+                      "value": "0xc369d344691BC695D10675efB3aFF64ed50fcEA7"
+                    },
+                    "id": 127,
+                    "name": "Literal",
+                    "src": "818:42:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "307862304363316232384435433236354436346130313131433831303163613433416646393233423530",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "address",
+                      "value": "0xb0Cc1b28D5C265D64a0111C8101ca43AfF923B50"
+                    },
+                    "id": 128,
+                    "name": "Literal",
+                    "src": "866:42:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "307846346138636538323646353730363334336545333530303941413736304234303261333937633938",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "address",
+                      "value": "0xF4a8ce826F5706343eE35009AA760B402a397c98"
+                    },
+                    "id": 129,
+                    "name": "Literal",
+                    "src": "914:42:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "307833343638614464366237663335363946373235313839643863313136316665663836334433323666",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "address",
+                      "value": "0x3468aDd6b7f3569F725189d8c1161fef863D326f"
+                    },
+                    "id": 130,
+                    "name": "Literal",
+                    "src": "962:42:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "307833433066383536393042303631333962613730314363303032416234383439304232616435363635",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "address",
+                      "value": "0x3C0f85690B06139ba701Cc002Ab48490B2ad5665"
+                    },
+                    "id": 131,
+                    "name": "Literal",
+                    "src": "1010:42:1"
+                  }
+                ],
+                "id": 132,
+                "name": "TupleExpression",
+                "src": "576:477:1"
+              }
+            ],
+            "id": 133,
+            "name": "VariableDeclaration",
+            "src": "542:511:1"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "BOARD_RESERVED_PERSENTAGE",
+              "scope": 148,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "uint256[] storage ref",
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "length": null,
+                  "type": "uint256[] storage pointer"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint256",
+                      "type": "uint256"
+                    },
+                    "id": 134,
+                    "name": "ElementaryTypeName",
+                    "src": "1060:7:1"
+                  }
+                ],
+                "id": 135,
+                "name": "ArrayTypeName",
+                "src": "1060:9:1"
+              },
+              {
+                "attributes": {
+                  "argumentTypes": null,
+                  "isConstant": false,
+                  "isInlineArray": true,
+                  "isLValue": false,
+                  "isPure": true,
+                  "lValueRequested": false,
+                  "type": "uint16[10] memory"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "32303030",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "int_const 2000",
+                      "value": "2000"
+                    },
+                    "id": 136,
+                    "name": "Literal",
+                    "src": "1106:4:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "32303030",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "int_const 2000",
+                      "value": "2000"
+                    },
+                    "id": 137,
+                    "name": "Literal",
+                    "src": "1111:4:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "32303030",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "int_const 2000",
+                      "value": "2000"
+                    },
+                    "id": 138,
+                    "name": "Literal",
+                    "src": "1116:4:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "31303030",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "int_const 1000",
+                      "value": "1000"
+                    },
+                    "id": 139,
+                    "name": "Literal",
+                    "src": "1121:4:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "31303030",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "int_const 1000",
+                      "value": "1000"
+                    },
+                    "id": 140,
+                    "name": "Literal",
+                    "src": "1126:4:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "353030",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "int_const 500",
+                      "value": "500"
+                    },
+                    "id": 141,
+                    "name": "Literal",
+                    "src": "1131:3:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "353030",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "int_const 500",
+                      "value": "500"
+                    },
+                    "id": 142,
+                    "name": "Literal",
+                    "src": "1135:3:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "343030",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "int_const 400",
+                      "value": "400"
+                    },
+                    "id": 143,
+                    "name": "Literal",
+                    "src": "1139:3:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "333030",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "int_const 300",
+                      "value": "300"
+                    },
+                    "id": 144,
+                    "name": "Literal",
+                    "src": "1143:3:1"
+                  },
+                  {
+                    "attributes": {
+                      "argumentTypes": null,
+                      "hexvalue": "333030",
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "subdenomination": null,
+                      "token": "number",
+                      "type": "int_const 300",
+                      "value": "300"
+                    },
+                    "id": 145,
+                    "name": "Literal",
+                    "src": "1147:3:1"
+                  }
+                ],
+                "id": 146,
+                "name": "TupleExpression",
+                "src": "1105:46:1"
+              }
+            ],
+            "id": 147,
+            "name": "VariableDeclaration",
+            "src": "1060:91:1"
+          }
+        ],
+        "id": 148,
+        "name": "ContractDefinition",
+        "src": "26:1129:1"
+      }
+    ],
+    "id": 149,
+    "name": "SourceUnit",
+    "src": "0:1155:1"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.19+commit.c4cbbb05.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "1.0.1",
+  "updatedAt": "2018-02-17T17:10:13.154Z"
+}

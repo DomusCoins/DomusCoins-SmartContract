@@ -1,0 +1,152 @@
+{
+  "contractName": "DOCTokenSaleConfig",
+  "abi": [],
+  "bytecode": "0x606060405273b0327663fc10dd843d3d2c35b18a08dd6dc5f68e6000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550620111df6001553415606957600080fd5b60358060766000396000f3006060604052600080fd00a165627a7a7230582050d819b7a8d12dca9ccc86b2f7fc7c7fd50926dd6bf47e9d794e867af940b1100029",
+  "deployedBytecode": "0x6060604052600080fd00a165627a7a7230582050d819b7a8d12dca9ccc86b2f7fc7c7fd50926dd6bf47e9d794e867af940b1100029",
+  "sourceMap": "25:163:1:-;;;84:42;59:67;;;;;;;;;;;;;;;;;;;;155:5;132:28;;25:163;;;;;;;;;;;;;;",
+  "deployedSourceMap": "25:163:1:-;;;;;",
+  "source": "pragma solidity ^0.4.0;\n\ncontract DOCTokenSaleConfig {\n    address WALLET_ADDRESS = 0xB0327663Fc10DD843D3D2C35b18a08DD6DC5F68e;\n    uint TOKEN_PER_TOKEN = 70111;//set current ether price\n}",
+  "sourcePath": "/var/www/html/erToken/contracts/DOCTokenSaleConfig.sol",
+  "ast": {
+    "attributes": {
+      "absolutePath": "/var/www/html/erToken/contracts/DOCTokenSaleConfig.sol",
+      "exportedSymbols": {
+        "DOCTokenSaleConfig": [
+          25
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.4",
+            ".0"
+          ]
+        },
+        "id": 18,
+        "name": "PragmaDirective",
+        "src": "0:23:1"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": true,
+          "linearizedBaseContracts": [
+            25
+          ],
+          "name": "DOCTokenSaleConfig",
+          "scope": 26
+        },
+        "children": [
+          {
+            "attributes": {
+              "constant": false,
+              "name": "WALLET_ADDRESS",
+              "scope": 25,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "address",
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "address",
+                  "type": "address"
+                },
+                "id": 19,
+                "name": "ElementaryTypeName",
+                "src": "59:7:1"
+              },
+              {
+                "attributes": {
+                  "argumentTypes": null,
+                  "hexvalue": "307842303332373636334663313044443834334433443243333562313861303844443644433546363865",
+                  "isConstant": false,
+                  "isLValue": false,
+                  "isPure": true,
+                  "lValueRequested": false,
+                  "subdenomination": null,
+                  "token": "number",
+                  "type": "address",
+                  "value": "0xB0327663Fc10DD843D3D2C35b18a08DD6DC5F68e"
+                },
+                "id": 20,
+                "name": "Literal",
+                "src": "84:42:1"
+              }
+            ],
+            "id": 21,
+            "name": "VariableDeclaration",
+            "src": "59:67:1"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "TOKEN_PER_TOKEN",
+              "scope": 25,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "uint256",
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "uint",
+                  "type": "uint256"
+                },
+                "id": 22,
+                "name": "ElementaryTypeName",
+                "src": "132:4:1"
+              },
+              {
+                "attributes": {
+                  "argumentTypes": null,
+                  "hexvalue": "3730313131",
+                  "isConstant": false,
+                  "isLValue": false,
+                  "isPure": true,
+                  "lValueRequested": false,
+                  "subdenomination": null,
+                  "token": "number",
+                  "type": "int_const 70111",
+                  "value": "70111"
+                },
+                "id": 23,
+                "name": "Literal",
+                "src": "155:5:1"
+              }
+            ],
+            "id": 24,
+            "name": "VariableDeclaration",
+            "src": "132:28:1"
+          }
+        ],
+        "id": 25,
+        "name": "ContractDefinition",
+        "src": "25:163:1"
+      }
+    ],
+    "id": 26,
+    "name": "SourceUnit",
+    "src": "0:188:1"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.19+commit.c4cbbb05.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "1.0.1",
+  "updatedAt": "2018-02-17T17:01:10.556Z"
+}

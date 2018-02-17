@@ -1,0 +1,7 @@
+npm install -g truffle
+
+truffle develop
+
+compile
+
+migrate

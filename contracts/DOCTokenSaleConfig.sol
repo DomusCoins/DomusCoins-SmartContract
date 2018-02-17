@@ -1,0 +1,6 @@
+pragma solidity ^0.4.0;
+
+contract DOCTokenSaleConfig {
+    address WALLET_ADDRESS = 0xB0327663Fc10DD843D3D2C35b18a08DD6DC5F68e;
+    uint TOKEN_PER_TOKEN = 70111;//set current ether price
+}

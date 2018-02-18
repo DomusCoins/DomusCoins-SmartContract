@@ -1,3 +1,6 @@
+# DomusCoins-SmartContract
+DomusCoins Smart Contracts
+
 npm install -g truffle
 
 truffle develop
@@ -5,3 +8,32 @@ truffle develop
 compile
 
 migrate
+
+
+DomusCoins Smart Contracts steup
+
+-Create token contract (DOCToken contract)
+
+-Set pretoken defult price ether TOKEN_PER_TOKEN varible in DOCTokenSaleConfig contract
+
+-ICO sale contract create( DOCTokenSale contract)
+
+-In ICO contract call funcation initilize SET address DOC token
+
+-In DOC Token contract  set addrees of ICO contract in setICOAddress funcation
+
+-Transter 10M token ICO sale contract address
+
+-ICO contract  send 1 ether(As per requriment) and call updateToken per ether funcation.(Update price of  ether every hours)
+
+-Buy token 
+
+
+-change all address
+
+#Note
+
+DOCTokenSale contract  Admin can start and stop ICO.
+function resume()  // Allows the owner to resume the sale.
+
+

@@ -12,6 +12,8 @@ migrate
 
 DomusCoins Smart Contracts steup
 
+-change all address(Board address and admin address)
+
 -Create token contract (DOCToken contract)
 
 -Set pretoken defult price ether TOKEN_PER_TOKEN varible in DOCTokenSaleConfig contract
@@ -29,7 +31,6 @@ DomusCoins Smart Contracts steup
 -Buy token 
 
 
--change all address
 
 #Note
 

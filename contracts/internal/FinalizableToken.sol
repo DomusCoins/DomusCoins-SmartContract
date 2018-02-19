@@ -9,7 +9,10 @@ contract FinalizableToken is ERC20Token, Owned {
 
     using Math for uint256;
 
-    //Public Reserved token address
+
+    /**
+         * @dev Call publicReservedAddress - library function exposed for testing.
+    */
     address publicReservedAddress;
 
     //board members persentages list

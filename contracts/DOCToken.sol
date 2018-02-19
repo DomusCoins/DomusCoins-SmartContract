@@ -15,23 +15,6 @@ contract DOCToken is FinalizableToken, DOCTokenConfig {
 
     }
 
-    //get dividend tokens
-    function claimDividendTokens(address _userAddress) public  onlyOwner returns (bool) {
-        uint256 dividendBalance = balanceOf(address(this));
-        require(dividendBalance > 0);
-        uint256 tokens = balances[_userAddress];
-        uint256 dividendToken = tokens.mul(dividendPersentage).div(tokenConversionFactor);
-        require(transfer(_userAddress, dividendToken));
-        return true;
-    }
-
-    //set dividend tokens persentage in between 1.00 % to 99.9 %, pass 111 for 1.11 %
-    function setDividendPersentage(uint _dividendPersentage) public onlyOwner returns (bool) {
-        require(_dividendPersentage >= 100 && _dividendPersentage <= 999);
-        dividendPersentage=_dividendPersentage;
-        return true;
-    }
-
 
     // Allows the owner to reclaim tokens that have been sent to the token address itself.
     function reclaimTokens() public onlyOwner returns (bool) {

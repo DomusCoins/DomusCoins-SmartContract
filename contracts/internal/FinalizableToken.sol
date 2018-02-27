@@ -21,7 +21,7 @@ contract FinalizableToken is ERC20Token, Owned {
     //ICO contract addresss
     FlexibleTokenSale saleToken;
 
-    event Burn(address burner,uint256 value);
+    event Burn(address indexed burner,uint256 value);
 
     // The constructor will assign the initial token supply to the owner (msg.sender).
     function FinalizableToken(string _name, string _symbol, uint8 _decimals, uint256 _totalSupply,address _publicReserved,uint256 _publicReservedPersentage,address[] _boardReserved,uint256[] _boardReservedPersentage) public

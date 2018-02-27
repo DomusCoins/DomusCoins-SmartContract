@@ -51,10 +51,10 @@ contract FlexibleTokenSale is  Owned, usingOraclize {
     event TokenPerEtherUpdated(bytes32 ID,uint256 _newValue);
     event TokenMinUpdated(uint256 _newValue);
     event TotalTokenUpdated(uint256 _newValue);
-    event WalletAddressUpdated(address _newAddress);
+    event WalletAddressUpdated(address indexed _newAddress);
     event SaleSuspended();
     event SaleResumed();
-    event TokensPurchased(address _beneficiary, uint256 _cost, uint256 _tokens);
+    event TokensPurchased(address indexed _beneficiary, uint256 _cost, uint256 _tokens);
     event TokensReclaimed(uint256 _amount);
 
 

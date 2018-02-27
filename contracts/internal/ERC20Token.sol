@@ -11,10 +11,10 @@ contract ERC20Token is ERC20Interface {
     string  private tokenSymbol;
     uint8   private tokenDecimals;
     uint256 internal tokenTotalSupply;
-    uint256 publicReservedToken;
-    uint256 tokenConversionFactor = 10**(4);
+    uint256 public publicReservedToken;
+    uint256 public tokenConversionFactor = 10**4;
     mapping(address => uint256) internal balances;
-    mapping(address => mapping (address => uint256)) allowed;
+    mapping(address => mapping (address => uint256)) internal allowed;
 
 
     function ERC20Token(string _name, string _symbol, uint8 _decimals, uint256 _totalSupply,address _publicReserved,uint256 _publicReservedPersentage,address[] boardReserved,uint256[] boardReservedPersentage) public {
@@ -24,8 +24,8 @@ contract ERC20Token is ERC20Interface {
         tokenTotalSupply = _totalSupply;
 
         // The initial Public Reserved balance of tokens is assigned to the given token holder address.
-        // 90 persentage tokens assign to public reserved  holder
-        publicReservedToken = _totalSupply.mul(uint256(_publicReservedPersentage)).div(tokenConversionFactor);
+        // 90 percentage tokens assign to public reserved  holder
+        publicReservedToken = _totalSupply.mul(_publicReservedPersentage).div(tokenConversionFactor);
         balances[_publicReserved] = publicReservedToken;
 
         //10 persentage token available for board members
@@ -37,7 +37,7 @@ contract ERC20Token is ERC20Interface {
         // The initial Board Reserved balance of tokens is assigned to the given token holder address.
         for(uint i=0; i<boardReserved.length; i++){
             //assigning board members persentage tokens to particular board member address.
-            uint256 token = boardReservedToken.mul(uint256(boardReservedPersentage[i])).div(tokenConversionFactor);
+            uint256 token = boardReservedToken.mul(boardReservedPersentage[i]).div(tokenConversionFactor);
             balances[boardReserved[i]] = token;
             Transfer(0x0, boardReserved[i], token);
         }

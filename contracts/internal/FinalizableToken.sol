@@ -13,10 +13,10 @@ contract FinalizableToken is ERC20Token, Owned {
     /**
          * @dev Call publicReservedAddress - library function exposed for testing.
     */
-    address publicReservedAddress;
+    address public publicReservedAddress;
 
     //board members persentages list
-    mapping(address=>uint) boardReservedAccount;
+    mapping(address=>uint) private boardReservedAccount;
 
     //ICO contract addresss
     FlexibleTokenSale saleToken;
@@ -38,7 +38,7 @@ contract FinalizableToken is ERC20Token, Owned {
         validateTransfer(msg.sender, _to,_value);
         //assign total sale token count
         if(address(saleToken) == _to) {
-            saleToken.setTotalToken(_value);
+            saleToken.addTotalToken(_value);
         }
         return super.transfer(_to, _value);
     }
@@ -48,7 +48,7 @@ contract FinalizableToken is ERC20Token, Owned {
         validateTransfer(msg.sender, _to, _value);
         //assign total sale token count
         if(address(saleToken) == _to) {
-            saleToken.setTotalToken(_value);
+            saleToken.addTotalToken(_value);
         }
         return super.transferFrom(_from, _to, _value);
     }
@@ -102,11 +102,6 @@ contract FinalizableToken is ERC20Token, Owned {
         return allowedToken;
     }
 
-    //get current time
-    function currentTime() public constant returns (uint256) {
-        return now;
-    }
-
     //set ICO address
     function setICOAddress(FlexibleTokenSale _saleToken) public onlyOwner returns (bool) {
         require(address(_saleToken) != address(0));
@@ -122,8 +117,7 @@ contract FinalizableToken is ERC20Token, Owned {
     function burn(uint256 _value) public {
         require(_value > 0);
         require(_value <= balances[msg.sender]);
-        // no need to require value <= totalSupply, since that would imply the
-        // sender's balance is greater than the totalSupply, which *should* be an assertion failure
+
 
         address burner = msg.sender;
         balances[burner] = balances[burner].sub(_value);

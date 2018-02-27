@@ -39,7 +39,7 @@ contract FlexibleTokenSale is  Owned, usingOraclize {
     uint256 public totalTokensSold;
     uint256 public totalEtherCollected;
 
-    bool public updatePrice = true;
+    bool public isUpdateAPIPrice = true;
 
 
 
@@ -70,7 +70,7 @@ contract FlexibleTokenSale is  Owned, usingOraclize {
         suspended = false;
         tokenPrice = 100;
         tokenPerEther = _tokenPerEther;
-        contributionMin     = 5 * 10**18;
+        contributionMin     = 5 * 10**18;//minimum 5 DOC token
         totalTokensSold     = 0;
         totalEtherCollected = 0;
     }
@@ -84,7 +84,7 @@ contract FlexibleTokenSale is  Owned, usingOraclize {
         require(address(_token) != address(walletAddress));
         require(isOwner(address(_token)) == false);
         tokenConversionFactor = 10**(uint256(18).sub(_token.decimals()).add(4).add(2));
-        require(tokenConversionFactor > 0);
+        assert(tokenConversionFactor > 0);
         token = _token;
 
         Initialized();
@@ -133,12 +133,12 @@ contract FlexibleTokenSale is  Owned, usingOraclize {
     }
 
     //count total token for sale added in ICO address
-    function setTotalToken(uint256 _token) external  returns(bool) {
-        require(msg.sender == address(token) && _token > 0);
+    function addTotalToken(uint256 _amount) external  returns(bool) {
+        require(msg.sender == address(token));
+        require(_amount > 0);
+        totalToken = totalToken.add(_amount);
 
-        totalToken = totalToken.add(_token);
-
-        TokenMinUpdated(_token);
+        TotalTokenUpdated(_amount);
 
         return true;
     }
@@ -192,10 +192,11 @@ contract FlexibleTokenSale is  Owned, usingOraclize {
     function buyTokens(address _beneficiary) public payable returns (uint256) {
         require(!suspended);
 
-
+        require(address(token) !=  address(0));
         require(_beneficiary != address(0));
         require(_beneficiary != address(this));
         require(_beneficiary != address(token));
+
 
         // We don't want to allow the wallet collecting ETH to
         // directly be used to purchase tokens.
@@ -203,14 +204,14 @@ contract FlexibleTokenSale is  Owned, usingOraclize {
 
         // Check how many tokens are still available for sale.
         uint256 saleBalance = token.balanceOf(address(this));
-        require(saleBalance > 0);
+        assert(saleBalance > 0);
 
 
         return buyTokensInternal(_beneficiary);
     }
 
-    function startStopUpdateTokenPerEther(bool _value) public onlyOwner returns(bool){
-        updatePrice = _value;
+    function startStopAPIUpdate(bool _value) public onlyOwner returns(bool){
+        isUpdateAPIPrice = _value;
 
         return true;
     }
@@ -224,7 +225,7 @@ contract FlexibleTokenSale is  Owned, usingOraclize {
         require(msg.sender == oraclize_cbAddress());
         tokenPerEther=stringToUint(result);
         TokenPerEtherUpdated(myid,tokenPerEther);
-        if(updatePrice)
+        if(isUpdateAPIPrice)
         updateTokenPerEther();
     }
 

@@ -40,10 +40,11 @@ contract Owned {
 
 
     function cancelOwnershipTransfer() public onlyOwner returns (bool) {
+        //if proposedOwner address already address(0) then it will return true.
         if (proposedOwner == address(0)) {
             return true;
         }
-
+        //if not then first it will do address(0( then it will return true.
         proposedOwner = address(0);
 
         OwnershipTransferCanceled();
@@ -53,6 +54,7 @@ contract Owned {
 
 
     function completeOwnershipTransfer() public returns (bool) {
+
         require(msg.sender == proposedOwner);
 
         owner = msg.sender;

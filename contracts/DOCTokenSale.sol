@@ -6,7 +6,7 @@ import "./DOCTokenSaleConfig.sol";
 contract DOCTokenSale is FlexibleTokenSale, DOCTokenSaleConfig {
 
     function DOCTokenSale() public
-    FlexibleTokenSale(WALLET_ADDRESS,TOKEN_PER_TOKEN)
+    FlexibleTokenSale(WALLET_ADDRESS,ETHER_PRICE)
     {
 
     }

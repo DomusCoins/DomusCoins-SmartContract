@@ -1,13 +1,13 @@
 pragma solidity ^0.4.0;
 
 import "./Owned.sol";
-import "../oraclize/oraclizeAPI.sol";
-import "./Math.sol";
+
+import "./SafeMath.sol";
 import "./FinalizableToken.sol";
 
-contract FlexibleTokenSale is  Owned, usingOraclize {
+contract FlexibleTokenSale is  Owned {
 
-    using Math for uint256;
+    using SafeMath for uint256;
 
     //
     // Lifecycle
@@ -31,7 +31,7 @@ contract FlexibleTokenSale is  Owned, usingOraclize {
     // Token
     //
     FinalizableToken public token;
-    uint256 public totalToken;
+    uint256 public totalToken = 0;
 
     //
     // Counters
@@ -103,7 +103,7 @@ contract FlexibleTokenSale is  Owned, usingOraclize {
         require(_walletAddress != address(0));
         require(_walletAddress != address(this));
         require(_walletAddress != address(token));
-        require(isOwner(_walletAddress) == false);
+        require(!isOwner(_walletAddress));
 
         walletAddress = _walletAddress;
 
@@ -112,7 +112,7 @@ contract FlexibleTokenSale is  Owned, usingOraclize {
         return true;
     }
 
-    //set token price in between $1.0 to $99.9, pass 111 for $1.11, 100000 for $1000
+    //set token price in between $1 to $1000, pass 111 for $1.11, 100000 for $1000
     function setTokenPrice(uint _tokenPrice) external onlyOwner returns (bool) {
         require(_tokenPrice >= 100 && _tokenPrice <= 100000);
 
@@ -210,23 +210,10 @@ contract FlexibleTokenSale is  Owned, usingOraclize {
         return buyTokensInternal(_beneficiary);
     }
 
-    function startStopAPIUpdate(bool _value) public onlyOwner returns(bool){
-        isUpdateAPIPrice = _value;
-
+    function updateTokenPerEther(uint _etherPrice) public onlyOwner returns(bool){
+        require(_etherPrice > 0);
+        tokenPerEther=_etherPrice;
         return true;
-    }
-
-    function updateTokenPerEther() public payable {
-        require(msg.sender == oraclize_cbAddress() || msg.sender == owner);
-        oraclize_query(7200,"URL","json(https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD).USD");
-    }
-
-    function __callback(bytes32 myid, string result) public  {
-        require(msg.sender == oraclize_cbAddress());
-        tokenPerEther=stringToUint(result);
-        TokenPerEtherUpdated(myid,tokenPerEther);
-        if(isUpdateAPIPrice)
-        updateTokenPerEther();
     }
 
 
@@ -278,23 +265,5 @@ contract FlexibleTokenSale is  Owned, usingOraclize {
         TokensReclaimed(tokens);
 
         return true;
-    }
-
-    //Below function will convert string to integer removing decimal
-    function stringToUint(string s) pure internal returns (uint) {
-        bytes memory b = bytes(s);
-        uint i;
-        uint result1 = 0;
-        for (i = 0; i < b.length; i++) {
-            uint c = uint(b[i]);
-            if(c == 46)
-            {
-                // Do nothing --this will skip the decimal
-            }
-            else if (c >= 48 && c <= 57) {
-                result1 = result1 * 10 + (c - 48);
-            }
-        }
-        return result1;
     }
 }

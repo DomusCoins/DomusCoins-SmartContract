@@ -5,7 +5,7 @@ import "./DOCTokenConfig.sol";
 
 contract DOCToken is FinalizableToken, DOCTokenConfig {
 
-    using Math for uint256;
+    using SafeMath for uint256;
     event TokensReclaimed(uint256 _amount);
     uint256 dividendPersentage;
 

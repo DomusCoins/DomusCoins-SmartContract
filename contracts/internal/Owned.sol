@@ -2,7 +2,7 @@ pragma solidity ^0.4.19;
 contract Owned {
 
     address public owner;
-    address public proposedOwner;
+    address public proposedOwner = address(0);
 
     event OwnershipTransferInitiated(address indexed _proposedOwner);
     event OwnershipTransferCompleted(address indexed _newOwner);
@@ -16,7 +16,7 @@ contract Owned {
 
 
     modifier onlyOwner() {
-        require(isOwner(msg.sender) == true);
+        require(isOwner(msg.sender));
         _;
     }
 

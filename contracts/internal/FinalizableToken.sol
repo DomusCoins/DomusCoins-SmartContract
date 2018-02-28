@@ -2,12 +2,12 @@ pragma solidity ^0.4.19;
 
 import "./ERC20Token.sol";
 import "./Owned.sol";
-import "./Math.sol";
+import "./SafeMath.sol";
 import "./FlexibleTokenSale.sol";
 
 contract FinalizableToken is ERC20Token, Owned {
 
-    using Math for uint256;
+    using SafeMath for uint256;
 
 
     /**

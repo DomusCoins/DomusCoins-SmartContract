@@ -1,11 +1,11 @@
 pragma solidity ^0.4.19;
 
 import "./ERC20Interface.sol";
-import "./Math.sol";
+import "./SafeMath.sol";
 
 contract ERC20Token is ERC20Interface {
 
-    using Math for uint256;
+    using SafeMath for uint256;
 
     string  private tokenName;
     string  private tokenSymbol;
@@ -14,6 +14,8 @@ contract ERC20Token is ERC20Interface {
     uint256 public publicReservedToken;
     uint256 public tokenConversionFactor = 10**4;
     mapping(address => uint256) internal balances;
+
+    // Owner of account approves the transfer of an amount to another account
     mapping(address => mapping (address => uint256)) internal allowed;
 
 
@@ -24,7 +26,7 @@ contract ERC20Token is ERC20Interface {
         tokenTotalSupply = _totalSupply;
 
         // The initial Public Reserved balance of tokens is assigned to the given token holder address.
-        // 90 percentage tokens assign to public reserved  holder
+        // from total supple 90% tokens assign to public reserved  holder
         publicReservedToken = _totalSupply.mul(_publicReservedPersentage).div(tokenConversionFactor);
         balances[_publicReserved] = publicReservedToken;
 
@@ -35,8 +37,12 @@ contract ERC20Token is ERC20Interface {
         Transfer(0x0, _publicReserved, publicReservedToken);
 
         // The initial Board Reserved balance of tokens is assigned to the given token holder address.
+        uint256 persentageSum = 0;
         for(uint i=0; i<boardReserved.length; i++){
             //assigning board members persentage tokens to particular board member address.
+            persentageSum = persentageSum.add(boardReservedPersentage[i]);
+            require(persentageSum <= 10000);
+
             uint256 token = boardReservedToken.mul(boardReservedPersentage[i]).div(tokenConversionFactor);
             balances[boardReserved[i]] = token;
             Transfer(0x0, boardReserved[i], token);
@@ -64,7 +70,7 @@ contract ERC20Token is ERC20Interface {
         return tokenTotalSupply;
     }
 
-
+    // Get the token balance for account `tokenOwner`
     function balanceOf(address _owner) public view returns (uint256 balance) {
         return balances[_owner];
     }
@@ -84,7 +90,12 @@ contract ERC20Token is ERC20Interface {
         return true;
     }
 
-
+    // Send `tokens` amount of tokens from address `from` to address `to`
+    // The transferFrom method is used for a withdraw workflow, allowing contracts to send
+    // tokens on your behalf, for example to "deposit" to a contract address and/or to charge
+    // fees in sub-currencies; the command should fail unless the _from account has
+    // deliberately authorized the sender of the message via some mechanism; we propose
+    // these standardized APIs for approval:
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
         balances[_from] = balances[_from].sub(_value);
         allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value);
@@ -95,7 +106,8 @@ contract ERC20Token is ERC20Interface {
         return true;
     }
 
-
+    // Allow `spender` to withdraw from your account, multiple times, up to the `tokens` amount.
+    // If this function is called again it overwrites the current allowance with _value.
     function approve(address _spender, uint256 _value) public returns (bool success) {
         allowed[msg.sender][_spender] = _value;
 

@@ -3,7 +3,6 @@ pragma solidity ^0.4.19;
 import "./ERC20Token.sol";
 import "./Owned.sol";
 import "./SafeMath.sol";
-import "./FlexibleTokenSale.sol";
 
 contract FinalizableToken is ERC20Token, Owned {
 
@@ -15,11 +14,9 @@ contract FinalizableToken is ERC20Token, Owned {
     */
     address public publicReservedAddress;
 
-    //board members persentages list
+    //board members time list
     mapping(address=>uint) private boardReservedAccount;
-
-    //ICO contract addresss
-    FlexibleTokenSale saleToken;
+    uint256[] public BOARD_RESERVED_YEARS = [1 years,2 years,3 years,4 years,5 years,6 years,7 years,8 years,9 years,10 years];
 
     event Burn(address indexed burner,uint256 value);
 
@@ -29,85 +26,36 @@ contract FinalizableToken is ERC20Token, Owned {
     Owned(){
         publicReservedAddress = _publicReserved;
         for(uint i=0; i<_boardReserved.length; i++){
-            boardReservedAccount[_boardReserved[i]] = balances[_boardReserved[i]];
+            boardReservedAccount[_boardReserved[i]] = currentTime() + BOARD_RESERVED_YEARS[i];
         }
     }
 
 
     function transfer(address _to, uint256 _value) public returns (bool success) {
-        validateTransfer(msg.sender, _to,_value);
-        //assign total sale token count
-        if(address(saleToken) == _to) {
-            saleToken.addTotalToken(_value);
-        }
+        require(validateTransfer(msg.sender, _to));
         return super.transfer(_to, _value);
     }
 
 
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
-        validateTransfer(msg.sender, _to, _value);
-        //assign total sale token count
-        if(address(saleToken) == _to) {
-            saleToken.addTotalToken(_value);
-        }
+        require(validateTransfer(msg.sender, _to));
         return super.transferFrom(_from, _to, _value);
     }
 
 
-    function validateTransfer(address _sender, address _to, uint256 _value) private view {
+    function validateTransfer(address _sender, address _to) private view returns(bool) {
         //check null address
         require(_to != address(0));
 
-        //check saleToken address
-        require(address(saleToken) != address(0));
-
-        //Only ICO address can send tokens to publicReservedAddress other then not allowed
-        require(address(saleToken) == _sender || publicReservedAddress != _to);
-
         //check board member address
-        uint256 allowed = boardReservedAccount[_sender];
-        if (allowed == 0) {
+        uint256 time = boardReservedAccount[_sender];
+        if (time == 0) {
             //if not then return and allow for transfer
-            return;
+            return true;
+        }else{
+            // else  then check allowed token for board member
+            return currentTime() > time;
         }
-
-        // if yes then check allowed token for board member
-        require(getBoardMemberAllowedToken(allowed)>=_value);
-
-
-    }
-
-    function getBoardMemberAllowedToken(uint allowed) internal constant returns (uint256) {
-
-        //check public reserved address tokens
-        uint256 publicReservedRemaining = balances[publicReservedAddress];
-
-        //total token allocated in ICO address
-        uint256 icoToken = saleToken.getTotalTokenCount();
-
-        //total sold token
-        uint256 publicSoldToken = saleToken.getSoldTokenCount();
-
-        //get remainToken count of public reserved address
-        publicReservedRemaining = publicReservedRemaining.add(icoToken).sub(publicSoldToken);
-
-        //count persentage for remainTokens
-        uint256 publicReservedSoldPersentage = publicReservedRemaining.mul(10000).div(publicReservedToken);
-
-        //and allowed that persentage tokens to board member
-        uint256 remainToken = allowed.mul(publicReservedSoldPersentage).div(tokenConversionFactor);
-        uint256 allowedToken = allowed.sub(remainToken);
-
-        //return allowedToken
-        return allowedToken;
-    }
-
-    //set ICO address
-    function setICOAddress(FlexibleTokenSale _saleToken) public onlyOwner returns (bool) {
-        require(address(_saleToken) != address(0));
-        require(address(_saleToken) != address(this));
-        saleToken = _saleToken;
-        return true;
     }
 
     /**
@@ -123,6 +71,11 @@ contract FinalizableToken is ERC20Token, Owned {
         balances[burner] = balances[burner].sub(_value);
         tokenTotalSupply = tokenTotalSupply.sub(_value);
         Burn(burner, _value);
+    }
+
+    //get current time
+    function currentTime() public constant returns (uint256) {
+        return now;
     }
 
 }

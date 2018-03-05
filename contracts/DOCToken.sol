@@ -7,7 +7,6 @@ contract DOCToken is FinalizableToken, DOCTokenConfig {
 
     using SafeMath for uint256;
     event TokensReclaimed(uint256 _amount);
-    uint256 dividendPersentage;
 
     function DOCToken() public
     FinalizableToken(TOKEN_NAME, TOKEN_SYMBOL, TOKEN_DECIMALS, TOKEN_TOTALSUPPLY, PUBLIC_RESERVED, PUBLIC_RESERVED_PERSENTAGE, BOARD_RESERVED, BOARD_RESERVED_PERSENTAGE)

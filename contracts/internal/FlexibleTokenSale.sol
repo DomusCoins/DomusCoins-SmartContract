@@ -1,9 +1,14 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.19;
 
 import "./Owned.sol";
-
 import "./SafeMath.sol";
-import "./FinalizableToken.sol";
+
+contract TokenTransfer {
+    // minimal subset of ERC20
+    function transfer(address _to, uint256 _value) public returns (bool success);
+    function decimals() public view returns (uint8 tokenDecimals);
+    function balanceOf(address _owner) public view returns (uint256 balance);
+}
 
 contract FlexibleTokenSale is  Owned {
 
@@ -30,8 +35,8 @@ contract FlexibleTokenSale is  Owned {
     //
     // Token
     //
-    FinalizableToken public token;
-    uint256 public totalToken = 0;
+    TokenTransfer token;
+
 
     //
     // Counters
@@ -39,18 +44,14 @@ contract FlexibleTokenSale is  Owned {
     uint256 public totalTokensSold;
     uint256 public totalEtherCollected;
 
-    bool public isUpdateAPIPrice = true;
-
-
 
     //
     // Events
     //
     event Initialized();
     event TokenPriceUpdated(uint256 _newValue);
-    event TokenPerEtherUpdated(bytes32 ID,uint256 _newValue);
+    event TokenPerEtherUpdated(uint256 _newValue);
     event TokenMinUpdated(uint256 _newValue);
-    event TotalTokenUpdated(uint256 _newValue);
     event WalletAddressUpdated(address indexed _newAddress);
     event SaleSuspended();
     event SaleResumed();
@@ -58,38 +59,27 @@ contract FlexibleTokenSale is  Owned {
     event TokensReclaimed(uint256 _amount);
 
 
-    function FlexibleTokenSale(address _walletAddress,uint _tokenPerEther) public
+    function FlexibleTokenSale(address _tokenAddress,address _walletAddress,uint _tokenPerEther) public
     Owned()
     {
 
         require(_walletAddress != address(0));
         require(_walletAddress != address(this));
+        require(address(token) == address(0));
+        require(address(_tokenAddress) != address(0));
+        require(address(_tokenAddress) != address(this));
+        require(address(_tokenAddress) != address(walletAddress));
 
         walletAddress = _walletAddress;
-
+        token = TokenTransfer(_tokenAddress);
         suspended = false;
         tokenPrice = 100;
         tokenPerEther = _tokenPerEther;
         contributionMin     = 5 * 10**18;//minimum 5 DOC token
         totalTokensSold     = 0;
         totalEtherCollected = 0;
-    }
-
-    // Initialize should be called by the owner as part of the deployment + setup phase.
-    // It will associate the sale contract with the token contract and perform basic checks.
-    function initialize(FinalizableToken _token) external onlyOwner returns(bool) {
-        require(address(token) == address(0));
-        require(address(_token) != address(0));
-        require(address(_token) != address(this));
-        require(address(_token) != address(walletAddress));
-        require(isOwner(address(_token)) == false);
-        tokenConversionFactor = 10**(uint256(18).sub(_token.decimals()).add(4).add(2));
+        tokenConversionFactor = 10**(uint256(18).sub(token.decimals()).add(4).add(2));
         assert(tokenConversionFactor > 0);
-        token = _token;
-
-        Initialized();
-
-        return true;
     }
 
 
@@ -103,7 +93,7 @@ contract FlexibleTokenSale is  Owned {
         require(_walletAddress != address(0));
         require(_walletAddress != address(this));
         require(_walletAddress != address(token));
-        require(!isOwner(_walletAddress));
+        require(isOwner(_walletAddress) == false);
 
         walletAddress = _walletAddress;
 
@@ -130,25 +120,6 @@ contract FlexibleTokenSale is  Owned {
         TokenMinUpdated(_minToken);
 
         return true;
-    }
-
-    //count total token for sale added in ICO address
-    function addTotalToken(uint256 _amount) external  returns(bool) {
-        require(msg.sender == address(token));
-        require(_amount > 0);
-        totalToken = totalToken.add(_amount);
-
-        TotalTokenUpdated(_amount);
-
-        return true;
-    }
-
-    function getSoldTokenCount() view external  returns(uint256) {
-        return totalTokensSold;
-    }
-
-    function getTotalTokenCount() view external  returns(uint256) {
-        return totalToken;
     }
 
     // Allows the owner to suspend the sale until it is manually resumed at a later time.
@@ -211,8 +182,8 @@ contract FlexibleTokenSale is  Owned {
     }
 
     function updateTokenPerEther(uint _etherPrice) public onlyOwner returns(bool){
-        require(_etherPrice > 0);
         tokenPerEther=_etherPrice;
+        TokenPerEtherUpdated(_etherPrice);
         return true;
     }
 
@@ -220,7 +191,6 @@ contract FlexibleTokenSale is  Owned {
     function buyTokensInternal(address _beneficiary) internal returns (uint256) {
 
         // Calculate how many tokens the contributor could purchase based on ETH received.
-
         uint256 tokens =msg.value.mul(tokenPerEther.mul(100).div(tokenPrice)).mul(10000).div(tokenConversionFactor);
         require(tokens >= contributionMin);
 
@@ -241,26 +211,16 @@ contract FlexibleTokenSale is  Owned {
     }
 
 
-
-    function getUserTokenBalance(address _beneficiary) internal view returns (uint256) {
-        return token.balanceOf(_beneficiary);
-    }
-
-
     // Allows the owner to take back the tokens that are assigned to the sale contract.
     function reclaimTokens() external onlyOwner returns (bool) {
+
         uint256 tokens = token.balanceOf(address(this));
 
         if (tokens == 0) {
             return false;
         }
 
-        address tokenOwner = token.owner();
-        require(tokenOwner != address(0));
-
-        totalToken = totalToken.sub(tokens);
-
-        require(token.transfer(tokenOwner, tokens));
+        require(token.transfer(owner, tokens));
 
         TokensReclaimed(tokens);
 

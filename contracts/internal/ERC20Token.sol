@@ -82,9 +82,12 @@ contract ERC20Token is ERC20Interface {
 
 
     function transfer(address _to, uint256 _value) public returns (bool success) {
-        balances[msg.sender] = balances[msg.sender].sub(_value);
-        balances[_to] = balances[_to].add(_value);
-
+        uint256 fromBalance = balances[msg.sender];
+        if (fromBalance < _value) return false;
+        if (_value > 0 && msg.sender != _to) {
+          balances[msg.sender] = fromBalance.sub(_value);
+          balances[_to] = balances[_to].add(_value);
+        }
         Transfer(msg.sender, _to, _value);
 
         return true;
@@ -97,9 +100,18 @@ contract ERC20Token is ERC20Interface {
     // deliberately authorized the sender of the message via some mechanism; we propose
     // these standardized APIs for approval:
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
-        balances[_from] = balances[_from].sub(_value);
-        allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value);
-        balances[_to] = balances[_to].add(_value);
+        
+        uint256 spenderAllowance = allowed [_from][msg.sender];
+        if (spenderAllowance < _value) return false;
+        uint256 fromBalance = balances [_from];
+        if (fromBalance < _value) return false;
+    
+        allowed [_from][msg.sender] = spenderAllowance.sub(_value);
+    
+        if (_value > 0 && _from != _to) {
+          balances [_from] = fromBalance.add(_value);
+          balances [_to] = balances[_to].add(_value);
+        }
 
         Transfer(_from, _to, _value);
 

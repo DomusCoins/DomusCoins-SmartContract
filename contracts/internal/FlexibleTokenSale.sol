@@ -78,7 +78,10 @@ contract FlexibleTokenSale is  Owned {
         contributionMin     = 5 * 10**18;//minimum 5 DOC token
         totalTokensSold     = 0;
         totalEtherCollected = 0;
-        tokenConversionFactor = 10**(uint256(18).sub(token.decimals()).add(4).add(2));
+        // This factor is used when converting cost <-> tokens.
+       // 18 is because of the ETH -> Wei conversion.
+      // 2 because toekn price  and etherPerToken Price are expressed as 100 for $1.00  and 100000 for $1000.00 (with 2 decimals).
+       tokenConversionFactor = 10**(uint256(18).sub(token.decimals()).add(2));
         assert(tokenConversionFactor > 0);
     }
 
@@ -191,7 +194,7 @@ contract FlexibleTokenSale is  Owned {
     function buyTokensInternal(address _beneficiary) internal returns (uint256) {
 
         // Calculate how many tokens the contributor could purchase based on ETH received.
-        uint256 tokens =msg.value.mul(tokenPerEther.mul(100).div(tokenPrice)).mul(10000).div(tokenConversionFactor);
+        uint256 tokens =msg.value.mul(tokenPerEther.mul(100).div(tokenPrice)).div(tokenConversionFactor);
         require(tokens >= contributionMin);
 
         // This is the actual amount of ETH that can be sent to the wallet.

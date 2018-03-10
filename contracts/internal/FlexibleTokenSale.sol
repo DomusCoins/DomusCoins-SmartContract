@@ -44,6 +44,10 @@ contract FlexibleTokenSale is  Owned {
     uint256 public totalTokensSold;
     uint256 public totalEtherCollected;
 
+    //
+    // Price Update Address
+    //
+    address public priceUpdateAddress;
 
     //
     // Events
@@ -57,9 +61,9 @@ contract FlexibleTokenSale is  Owned {
     event SaleResumed();
     event TokensPurchased(address indexed _beneficiary, uint256 _cost, uint256 _tokens);
     event TokensReclaimed(uint256 _amount);
+    event PriceAddressUpdated(address indexed _newAddress);
 
-
-    function FlexibleTokenSale(address _tokenAddress,address _walletAddress,uint _tokenPerEther) public
+    function FlexibleTokenSale(address _tokenAddress,address _walletAddress,uint _tokenPerEther,address _priceUpdateAddress) public
     Owned()
     {
 
@@ -71,6 +75,7 @@ contract FlexibleTokenSale is  Owned {
         require(address(_tokenAddress) != address(walletAddress));
 
         walletAddress = _walletAddress;
+        priceUpdateAddress = _priceUpdateAddress;
         token = TokenTransfer(_tokenAddress);
         suspended = false;
         tokenPrice = 100;
@@ -184,9 +189,18 @@ contract FlexibleTokenSale is  Owned {
         return buyTokensInternal(_beneficiary);
     }
 
-    function updateTokenPerEther(uint _etherPrice) public onlyOwner returns(bool){
+    function updateTokenPerEther(uint _etherPrice) public returns(bool){
+        require(_etherPrice > 0);
+        require(msg.sender == priceUpdateAddress || msg.sender == owner);
         tokenPerEther=_etherPrice;
         TokenPerEtherUpdated(_etherPrice);
+        return true;
+    }
+
+    function updatePriceAddress(address _newAddress) public onlyOwner returns(bool){
+        require(_newAddress != address(0));
+        priceUpdateAddress=_newAddress;
+        PriceAddressUpdated(_newAddress);
         return true;
     }
 

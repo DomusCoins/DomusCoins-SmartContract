@@ -109,7 +109,7 @@ contract ERC20Token is ERC20Interface {
         allowed [_from][msg.sender] = spenderAllowance.sub(_value);
     
         if (_value > 0 && _from != _to) {
-          balances [_from] = fromBalance.add(_value);
+          balances [_from] = fromBalance.sub(_value);
           balances [_to] = balances[_to].add(_value);
         }
 
